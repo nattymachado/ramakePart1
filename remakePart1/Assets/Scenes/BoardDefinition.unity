@@ -623,6 +623,60 @@ Prefab:
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 57e1c60d06a2d2d43b12c0616c0d1772, type: 2}
   m_IsPrefabParent: 0
+--- !u!1001 &969132855
+Prefab:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 4117326746007364, guid: 57e1c60d06a2d2d43b12c0616c0d1772, type: 2}
+      propertyPath: m_LocalPosition.x
+      value: 0.43
+      objectReference: {fileID: 0}
+    - target: {fileID: 4117326746007364, guid: 57e1c60d06a2d2d43b12c0616c0d1772, type: 2}
+      propertyPath: m_LocalPosition.y
+      value: 6.55
+      objectReference: {fileID: 0}
+    - target: {fileID: 4117326746007364, guid: 57e1c60d06a2d2d43b12c0616c0d1772, type: 2}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4117326746007364, guid: 57e1c60d06a2d2d43b12c0616c0d1772, type: 2}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4117326746007364, guid: 57e1c60d06a2d2d43b12c0616c0d1772, type: 2}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4117326746007364, guid: 57e1c60d06a2d2d43b12c0616c0d1772, type: 2}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4117326746007364, guid: 57e1c60d06a2d2d43b12c0616c0d1772, type: 2}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4117326746007364, guid: 57e1c60d06a2d2d43b12c0616c0d1772, type: 2}
+      propertyPath: m_RootOrder
+      value: 21
+      objectReference: {fileID: 0}
+    - target: {fileID: 4117326746007364, guid: 57e1c60d06a2d2d43b12c0616c0d1772, type: 2}
+      propertyPath: m_LocalScale.x
+      value: 3.6
+      objectReference: {fileID: 0}
+    - target: {fileID: 4117326746007364, guid: 57e1c60d06a2d2d43b12c0616c0d1772, type: 2}
+      propertyPath: m_LocalScale.y
+      value: 3.6
+      objectReference: {fileID: 0}
+    - target: {fileID: 1725057110687102, guid: 57e1c60d06a2d2d43b12c0616c0d1772, type: 2}
+      propertyPath: m_Name
+      value: pillGroup (19)
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_ParentPrefab: {fileID: 100100000, guid: 57e1c60d06a2d2d43b12c0616c0d1772, type: 2}
+  m_IsPrefabParent: 0
 --- !u!1001 &978430475
 Prefab:
   m_ObjectHideFlags: 0
