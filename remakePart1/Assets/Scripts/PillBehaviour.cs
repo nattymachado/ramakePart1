@@ -6,6 +6,7 @@ public class PillBehaviour : MonoBehaviour {
 
     private float _totalTime;
     private float _pillPartSize = 0;
+    private bool _stop_moviment = false;
     private SpriteRenderer[] _pills = null;
     private BoardBehaviour _parent_script = null;
     private SpriteRenderer _parent_sprite = null;
@@ -15,7 +16,9 @@ public class PillBehaviour : MonoBehaviour {
         _pills = GetComponentsInChildren<SpriteRenderer>();
         _parent_script = transform.parent.GetComponent<BoardBehaviour>();
         _parent_sprite = transform.parent.GetComponent<SpriteRenderer>();
-        _pillPartSize = ((_pills[0].size.x / 2f));
+        Debug.Log(_pills[0].size.y);
+        Debug.Log(_pills[1].size.x);
+        _pillPartSize = (_pills[0].size.x / 2.3f);
     }
 
     // Update is called once per frame
@@ -24,17 +27,20 @@ public class PillBehaviour : MonoBehaviour {
         
         if (_parent_script.pill != null)
         {
-            if (transform.parent.localPosition.y < (transform.localPosition.y - _parent_script.speed))
+            if (_stop_moviment == false)
             {
-                transform.localPosition = new Vector3(transform.localPosition.x, transform.localPosition.y - _parent_script.speed, 0f);
-                HorizontalMove();
-                VerticalMove();
+                if (transform.parent.localPosition.y < (transform.localPosition.y - _parent_script.speed))
+                {
+                    transform.localPosition = new Vector3(transform.localPosition.x, transform.localPosition.y - _parent_script.speed, 0f);
+                    HorizontalMove();
+                    VerticalMove();
+                }
+            } else
+            {
+                _parent_script.pill = null;
             }
-
-            
+               
         }
-        
-        
     }
 
     public void HorizontalMove()
@@ -52,6 +58,8 @@ public class PillBehaviour : MonoBehaviour {
             //if (transform.parent.localPosition.x < (transform.localPosition.x - one_pill_size))
             //{
                 transform.localPosition = new Vector3(transform.localPosition.x - _pillPartSize, transform.localPosition.y, 0f);
+            
+                
             //}
         }
         else if (Input.GetKeyDown(KeyCode.RightArrow))
@@ -66,8 +74,9 @@ public class PillBehaviour : MonoBehaviour {
             }
             //if (_parent_sprite.size.x > (transform.localPosition.x + one_pill_size))
             //{
-            transform.localPosition = new Vector3(transform.localPosition.x + _pillPartSize, transform.localPosition.y, 0f);
-            //}
+                transform.localPosition = new Vector3(transform.localPosition.x + _pillPartSize, transform.localPosition.y, 0f);
+            
+                //}
         }
     }
 
@@ -82,5 +91,22 @@ public class PillBehaviour : MonoBehaviour {
         {
             transform.Rotate(0, 0, -90);
         }
+    }
+
+    public void OnTriggerEnter2D()
+    {
+        Debug.Log("OnTriggerEnter2D");
+        _stop_moviment = true;
+    }
+
+    public void OnTriggerStay2D()
+    {
+        Debug.Log("OnTriggerStay2D");
+       
+    }
+
+    public void OnTriggerExit2D()
+    {
+        Debug.Log("OnTriggerExit2D");
     }
 }
