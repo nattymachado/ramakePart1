@@ -10,15 +10,17 @@ public class PillBehaviour : MonoBehaviour {
     private SpriteRenderer[] _pills = null;
     private BoardBehaviour _parent_script = null;
     private SpriteRenderer _parent_sprite = null;
+    private Quaternion _original_rotation;
+    private int _pill_state = 0;
 
     // Use this for initialization
     public void Start () {
         _pills = GetComponentsInChildren<SpriteRenderer>();
         _parent_script = transform.parent.GetComponent<BoardBehaviour>();
         _parent_sprite = transform.parent.GetComponent<SpriteRenderer>();
-        Debug.Log(_pills[0].size.y);
-        Debug.Log(_pills[1].size.x);
-        _pillPartSize = (_pills[0].size.x / 2.3f);
+        _original_rotation = transform.rotation;
+
+        _pillPartSize = 1;
     }
 
     // Update is called once per frame
@@ -45,52 +47,70 @@ public class PillBehaviour : MonoBehaviour {
 
     public void HorizontalMove()
     {
-        float one_pill_size = 0;
         if (Input.GetKeyDown(KeyCode.LeftArrow))
         {
-            if (transform.rotation.z != 90 && transform.rotation.z != -90)
+            Debug.Log(_parent_sprite.bounds.size.x);
+            Debug.Log(transform.position.x - _pillPartSize);
+            if (transform.parent.position.x < (transform.position.x - _pillPartSize))
             {
-                one_pill_size = (_pillPartSize * 2);
-            }  else
-            {
-                one_pill_size = (_pillPartSize);
-            }
-            //if (transform.parent.localPosition.x < (transform.localPosition.x - one_pill_size))
-            //{
-                transform.localPosition = new Vector3(transform.localPosition.x - _pillPartSize, transform.localPosition.y, 0f);
+            transform.position = new Vector3(transform.position.x - _pillPartSize, transform.position.y, 0f);
             
                 
-            //}
+            }
         }
         else if (Input.GetKeyDown(KeyCode.RightArrow))
         {
-            if (transform.rotation.z != 90 && transform.rotation.z != -90)
+            if ((_parent_sprite.bounds.size.x-_pillPartSize) > (transform.position.x + _pillPartSize))
             {
-                one_pill_size = (_pillPartSize * 2);
-            }
-            else
-            {
-                one_pill_size = (_pillPartSize);
-            }
-            //if (_parent_sprite.size.x > (transform.localPosition.x + one_pill_size))
-            //{
-                transform.localPosition = new Vector3(transform.localPosition.x + _pillPartSize, transform.localPosition.y, 0f);
+                transform.position = new Vector3(transform.position.x + _pillPartSize, transform.position.y, 0f);
             
-                //}
+            }
         }
     }
 
     public void VerticalMove()
     {
+        Debug.Log(transform.rotation.x);
+        if (Input.GetKeyDown(KeyCode.X))
+        {
+            
+            if (_pill_state == 0)
+            {
+                transform.rotation = _original_rotation;
+                transform.Rotate(0, 0, 90);
+               // transform.Rotate(0, 180, 0);
+                _pill_state = 1;
+            } else if (_pill_state == 1)
+            {
+                transform.rotation = _original_rotation;
+                transform.Rotate(0, 180, 0);
+                _pill_state = 2;
+            } else if (_pill_state == 2)
+            {
+                transform.rotation = _original_rotation;
+                transform.Rotate(0, 0, 90);
+                transform.Rotate(0, 180, 0);
+                _pill_state = 3;
+            } else if (_pill_state == 3)
+            {
+                transform.rotation = _original_rotation;
+                _pill_state = 0;
+            }
 
-        if (Input.GetKeyDown(KeyCode.DownArrow))
-        {
-            transform.Rotate(0, 0, 90);
+
+            //float angleRotation = transform.rotation.z;
+
         }
-        else if (Input.GetKeyDown(KeyCode.UpArrow))
+
+        if (Input.GetKeyDown(KeyCode.Z))
         {
-            transform.Rotate(0, 0, -90);
+
+            transform.Rotate(0, 180, 0);
+            
+
         }
+
+
     }
 
     public void OnTriggerEnter2D()
