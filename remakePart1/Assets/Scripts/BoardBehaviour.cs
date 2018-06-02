@@ -7,30 +7,24 @@ public class BoardBehaviour : MonoBehaviour {
     public GameObject prefab;
     public GameObject pill = null;
     private GameObject pillPart2 = null;
-    private SpriteRenderer board = null;
-    public float speed;
+    private SpriteRenderer boardRenderer = null;
+    public float wait_for_moviment = 0.5f;
+    public Board board = new Board();
 
     Color[] colors = new Color[] { Color.red, Color.yellow, Color.cyan};
 
     // Use this for initialization
     public void Start () {
-        board = GetComponent<SpriteRenderer>();
+        boardRenderer = GetComponent<SpriteRenderer>();
     }
     
 	// Update is called once per frame
 	public void Update () {
         
         if (pill == null)
-        {
+        { 
             createNewPill();
 
-        } else
-        {
-            if (board.transform.localPosition.y > (pill.transform.localPosition.y - speed))
-            {
-                pill = null;
-            }
-            
         }
         
         
@@ -40,17 +34,18 @@ public class BoardBehaviour : MonoBehaviour {
     private void createNewPill()
     {
         Vector3 pos = new Vector3(0, 0, 0);
+        Debug.Log("Creating new instance");
         pill = Instantiate(prefab, pos, Quaternion.Euler(0, 0, 0));
         SpriteRenderer[] pillParts =  pill.GetComponentsInChildren<SpriteRenderer>();
         pillParts[0].color = colors[Random.Range(0, colors.Length)];
         pillParts[1].color = colors[Random.Range(0, colors.Length)];
 
-        float initial_y = board.size.y;
-        float initial_x = (board.size.x - (pillParts[0].size.x * 1.9f));
+        float initial_y = 16.2f;
+        float initial_x = 4.6f;
         Vector3 newPosition = new Vector3(initial_x, initial_y, 0);
 
-        pill.transform.parent = board.transform;
-        pill.transform.localPosition = newPosition;
+        pill.transform.parent = boardRenderer.transform;
+        pill.transform.position = newPosition;
         
     }
 }

@@ -232,7 +232,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   prefab: {fileID: 1725057110687102, guid: 57e1c60d06a2d2d43b12c0616c0d1772, type: 2}
   pill: {fileID: 0}
-  speed: 0.001
+  wait_for_moviment: 0.5
 --- !u!212 &1985141809
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -284,8 +284,8 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1985141807}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 2.0643814, y: 2.494937, z: 1}
+  m_LocalPosition: {x: 0, y: -0.039, z: 0}
+  m_LocalScale: {x: 2.0715134, y: 2.500981, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 1
