@@ -16,6 +16,13 @@ public class BoardBehaviour : MonoBehaviour {
     // Use this for initialization
     public void Start () {
         boardRenderer = GetComponent<SpriteRenderer>();
+        for (int horizontal=0; horizontal < board.mainBoard.GetLength(0); horizontal++ )
+        {
+            for (int vertical = 0; vertical < board.mainBoard.GetLength(1); vertical++)
+            {
+                board.mainBoard[horizontal,vertical] = null;
+            }
+        }
     }
     
 	// Update is called once per frame
@@ -41,7 +48,7 @@ public class BoardBehaviour : MonoBehaviour {
         pillParts[1].color = colors[Random.Range(0, colors.Length)];
 
         float initial_y = 16.2f;
-        float initial_x = 4.6f;
+        float initial_x = 4.5f;
         Vector3 newPosition = new Vector3(initial_x, initial_y, 0);
 
         pill.transform.parent = boardRenderer.transform;
