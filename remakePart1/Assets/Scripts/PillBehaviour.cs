@@ -37,7 +37,7 @@ public class PillBehaviour : MonoBehaviour {
         _vertical_position[1] = 4;
         _horizontal_lenght -= 1;
         _vertical_lenght -= 1;
-        _pillPartSize = 1;
+        _pillPartSize = 1f;
     }
 
 
@@ -74,17 +74,7 @@ public class PillBehaviour : MonoBehaviour {
         _parent_script.board.CheckCombinations(_horizontal_position[1], _vertical_position[1]);
     }
 
-    public bool IsPositionEmpty(int[] horizontal, int[] vertical)
-    {
-        if (horizontal[0] > _horizontal_lenght || horizontal[1] > _horizontal_lenght)
-        {
-            return true;
-        } else
-        {
-            return _parent_script.board.mainBoard[horizontal[0], vertical[0]] == null && _parent_script.board.mainBoard[horizontal[1], vertical[1]] == null;
-        }
-        
-    }
+    
 
     public int[] CopyPositions(int[] original_positions)
     {
@@ -102,7 +92,8 @@ public class PillBehaviour : MonoBehaviour {
         int[] nextVerticalPosition = CopyPositions(_vertical_position);
         nextHorizontalPosition[0] -= 1;
         nextHorizontalPosition[1] -= 1;
-        if (_horizontal_position[0] > 0 && _horizontal_position[1] > 0 && IsPositionEmpty(nextHorizontalPosition, nextVerticalPosition))
+        if (_parent_script.board.IsPositionEmpty(nextHorizontalPosition[0], nextVerticalPosition[0]) &&
+            _parent_script.board.IsPositionEmpty(nextHorizontalPosition[1], nextVerticalPosition[1]))
         {
             if (_period > _parent_script.wait_for_moviment)
             {
@@ -131,7 +122,8 @@ public class PillBehaviour : MonoBehaviour {
         int[] nextVerticalPosition = CopyPositions(_vertical_position);
         nextVerticalPosition[0] -= 1;
         nextVerticalPosition[1] -= 1;
-        if (_vertical_position[0] != 0 && _vertical_position[1] != 0 && IsPositionEmpty(nextHorizontalPosition, nextVerticalPosition))
+        if (_parent_script.board.IsPositionEmpty(nextHorizontalPosition[0], nextVerticalPosition[0]) &&
+            _parent_script.board.IsPositionEmpty(nextHorizontalPosition[1], nextVerticalPosition[1]))
         {
             transform.position = new Vector3(transform.position.x - _pillPartSize, transform.position.y, 0f);
             _vertical_position[0] = nextVerticalPosition[0];
@@ -145,7 +137,8 @@ public class PillBehaviour : MonoBehaviour {
         int[] nextVerticalPosition = CopyPositions(_vertical_position);
         nextVerticalPosition[0] += 1;
         nextVerticalPosition[1] += 1;
-        if (_vertical_position[0] != _vertical_lenght && _vertical_position[1] != _vertical_lenght && IsPositionEmpty(nextHorizontalPosition, nextVerticalPosition))
+        if (_parent_script.board.IsPositionEmpty(nextHorizontalPosition[0], nextVerticalPosition[0]) &&
+            _parent_script.board.IsPositionEmpty(nextHorizontalPosition[1], nextVerticalPosition[1]))
         {
             transform.position = new Vector3(transform.position.x + _pillPartSize, transform.position.y, 0f);
             _vertical_position[0] = nextVerticalPosition[0];
@@ -189,11 +182,12 @@ public class PillBehaviour : MonoBehaviour {
         int[] nextVerticalPosition = CopyPositions(_vertical_position);
         nextHorizontalPosition[0] -= 1;
         nextVerticalPosition[1] -= 1;
-        if (IsPositionEmpty(nextHorizontalPosition, nextVerticalPosition))
+        if (_parent_script.board.IsPositionEmpty(nextHorizontalPosition[0], nextVerticalPosition[0]) &&
+            _parent_script.board.IsPositionEmpty(nextHorizontalPosition[1], nextVerticalPosition[1]))
         {
             transform.rotation = _original_rotation;
             transform.Rotate(0, 0, 90);
-            transform.position = new Vector3(transform.position.x - (_pillPartSize * 0.8f), transform.position.y + (_pillPartSize * 0.38f), transform.position.z);
+            transform.position = new Vector3(transform.position.x - (_pillPartSize * 0.75f), transform.position.y + (_pillPartSize * 0.38f), transform.position.z);
             transform.localScale = _vertical_scale;
             _horizontal_position[0] = nextHorizontalPosition[0];
             _vertical_position[1] = nextVerticalPosition[1];
@@ -207,7 +201,8 @@ public class PillBehaviour : MonoBehaviour {
         int[] nextVerticalPosition = CopyPositions(_vertical_position);
         nextHorizontalPosition[0] += 1;
         nextVerticalPosition[0] += 1;
-        if (IsPositionEmpty(nextHorizontalPosition, nextVerticalPosition))
+        if (_parent_script.board.IsPositionEmpty(nextHorizontalPosition[0], nextVerticalPosition[0]) &&
+            _parent_script.board.IsPositionEmpty(nextHorizontalPosition[1], nextVerticalPosition[1]))
         {
             transform.rotation = _original_rotation;
             transform.Rotate(0, 180, 0);
@@ -225,7 +220,8 @@ public class PillBehaviour : MonoBehaviour {
         int[] nextVerticalPosition = CopyPositions(_vertical_position);
         nextHorizontalPosition[1] -= 1;
         nextVerticalPosition[0] -= 1;
-        if (IsPositionEmpty(nextHorizontalPosition, nextVerticalPosition))
+        if (_parent_script.board.IsPositionEmpty(nextHorizontalPosition[0], nextVerticalPosition[0]) &&
+            _parent_script.board.IsPositionEmpty(nextHorizontalPosition[1], nextVerticalPosition[1]))
         {
             transform.rotation = _original_rotation;
             transform.Rotate(0, 0, 90);
