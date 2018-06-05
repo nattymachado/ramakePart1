@@ -83,4 +83,17 @@ public class Board {
         }
         return positions_with_same_color;
     }
+
+    public bool IsPositionEmpty(int horizontal, int vertical)
+
+    {
+       
+        if (horizontal < 0 || horizontal > mainBoard.GetLength(0) || vertical < 0 || vertical > mainBoard.GetLength(1))
+        {
+            return false;
+        } else
+        {
+            return true;
+        }
+    }
 }

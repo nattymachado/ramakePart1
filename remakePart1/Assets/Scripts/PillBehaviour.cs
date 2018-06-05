@@ -2,7 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+
+
 public class PillBehaviour : MonoBehaviour {
+
+    private Color[] _colors = new Color[] { Color.red, Color.yellow, Color.cyan };
+    public Vector3 initPillPosition = new Vector3();
+    public Vector3 horizontalStateScale = new Vector3();
+    public Vector3 verticalStateScale = new Vector3();
 
     private float _totalTime;
     private float _pillPartSize = 0;
@@ -11,8 +18,6 @@ public class PillBehaviour : MonoBehaviour {
     private SpriteRenderer _parent_sprite = null;
     private Quaternion _original_rotation;
     private PillState _pill_state = 0;
-    private Vector3 _vertical_scale = new Vector3(0.48f, 0.46f, 1f);
-    private Vector3 _horizontal_scale = new Vector3(0.58f, 0.4f, 1f);
     private float _period = 0;
     private int _horizontal_lenght = 0;
     private int _vertical_lenght = 0;
@@ -27,7 +32,7 @@ public class PillBehaviour : MonoBehaviour {
         _parent_script = transform.parent.GetComponent<BoardBehaviour>();
         _parent_sprite = transform.parent.GetComponent<SpriteRenderer>();
         _original_rotation = transform.rotation;
-        transform.localScale = _horizontal_scale;
+        transform.localScale = horizontalStateScale;
         //Init positions
         _horizontal_lenght = _parent_script.board.mainBoard.GetLength(0);
         _vertical_lenght = _parent_script.board.mainBoard.GetLength(1);
@@ -40,34 +45,20 @@ public class PillBehaviour : MonoBehaviour {
         _pillPartSize = 1f;
     }
 
+    public void CreatePill(Transform parent)
+    {
+        SpriteRenderer[] pillParts = GetComponentsInChildren<SpriteRenderer>();
+        pillParts[0].color = _colors[Random.Range(0, _colors.Length)];
+        pillParts[1].color = _colors[Random.Range(0, _colors.Length)];
+        transform.parent = parent;
+        transform.position = initPillPosition;
+    }
+
 
     public void includeValuesOnBoard()
     {
-        int color_value1 = 0;
-        int color_value2 = 0;
-        if (_pills[0].color == Color.red)
-        {
-            color_value1 = 1;
-        } else if (_pills[0].color == Color.cyan) 
-        {
-            color_value1 = 2;
-        } else {
-            color_value1 = 3;
-        }
-
-        if (_pills[1].color == Color.red)
-        {
-            color_value2 = 1;
-        }
-        else if (_pills[1].color == Color.cyan)
-        {
-            color_value2 = 2;
-        }
-        else
-        {
-            color_value2 = 3;
-        }
-
+        
+        
         _parent_script.board.mainBoard[_horizontal_position[0], _vertical_position[0]] = _pills[0];
         _parent_script.board.mainBoard[_horizontal_position[1], _vertical_position[1]] = _pills[1];
         _parent_script.board.CheckCombinations(_horizontal_position[0], _vertical_position[0]);
@@ -150,7 +141,7 @@ public class PillBehaviour : MonoBehaviour {
     public void Update () {
         _totalTime += Time.deltaTime;
         
-        if (_parent_script.pill.transform == transform)
+        if ( _parent_script.pill != null &&_parent_script.pill.transform == transform)
         {
             
             MovimentDown();
@@ -185,10 +176,11 @@ public class PillBehaviour : MonoBehaviour {
         if (_parent_script.board.IsPositionEmpty(nextHorizontalPosition[0], nextVerticalPosition[0]) &&
             _parent_script.board.IsPositionEmpty(nextHorizontalPosition[1], nextVerticalPosition[1]))
         {
+           
             transform.rotation = _original_rotation;
             transform.Rotate(0, 0, 90);
             transform.position = new Vector3(transform.position.x - (_pillPartSize * 0.75f), transform.position.y + (_pillPartSize * 0.38f), transform.position.z);
-            transform.localScale = _vertical_scale;
+            transform.localScale = verticalStateScale;
             _horizontal_position[0] = nextHorizontalPosition[0];
             _vertical_position[1] = nextVerticalPosition[1];
             _pill_state = PillState.VERTICAL_ORIGINAL;
@@ -207,7 +199,7 @@ public class PillBehaviour : MonoBehaviour {
             transform.rotation = _original_rotation;
             transform.Rotate(0, 180, 0);
             transform.position = new Vector3(transform.position.x - (_pillPartSize * 0.3f), transform.position.y - (_pillPartSize * 0.4f), transform.position.z);
-            transform.localScale = _horizontal_scale;
+            transform.localScale = horizontalStateScale;
             _horizontal_position[0] = nextHorizontalPosition[0];
             _vertical_position[0] = nextVerticalPosition[0];
             _pill_state = PillState.HORIZONTAL_INVERTED;
@@ -227,7 +219,7 @@ public class PillBehaviour : MonoBehaviour {
             transform.Rotate(0, 0, 90);
             transform.Rotate(0, 180, 0);
             transform.position = new Vector3(transform.position.x + (_pillPartSize * 0.3f), transform.position.y - (_pillPartSize * 0.7f), transform.position.z);
-            transform.localScale = _vertical_scale;
+            transform.localScale = verticalStateScale;
             _vertical_position[0] = nextVerticalPosition[0];
             _horizontal_position[1] = nextHorizontalPosition[1];
             _pill_state = PillState.VERTICAL_INVERTED;
@@ -240,11 +232,12 @@ public class PillBehaviour : MonoBehaviour {
         int[] nextVerticalPosition = CopyPositions(_vertical_position);
         nextHorizontalPosition[1] += 1;
         nextVerticalPosition[1] += 1;
-        if (IsPositionEmpty(nextHorizontalPosition, nextVerticalPosition))
+        if (_parent_script.board.IsPositionEmpty(nextHorizontalPosition[0], nextVerticalPosition[0]) &&
+            _parent_script.board.IsPositionEmpty(nextHorizontalPosition[1], nextVerticalPosition[1]))
         {
             transform.rotation = _original_rotation;
             transform.position = new Vector3(transform.position.x + (_pillPartSize * 0.73f), transform.position.y + (_pillPartSize * 0.75f), transform.position.z);
-            transform.localScale = _horizontal_scale;
+            transform.localScale = horizontalStateScale;
             _vertical_position[1] = nextVerticalPosition[1];
             _horizontal_position[1] = nextHorizontalPosition[1];
             _pill_state = PillState.HORIZONTAL_ORIGINAL;

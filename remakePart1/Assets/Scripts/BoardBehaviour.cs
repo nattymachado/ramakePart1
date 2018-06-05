@@ -11,7 +11,7 @@ public class BoardBehaviour : MonoBehaviour {
     public float wait_for_moviment = 0.5f;
     public Board board = new Board();
 
-    Color[] colors = new Color[] { Color.red, Color.yellow, Color.cyan};
+    
 
     // Use this for initialization
     public void Start () {
@@ -43,16 +43,7 @@ public class BoardBehaviour : MonoBehaviour {
         Vector3 pos = new Vector3(0, 0, 0);
         Debug.Log("Creating new instance");
         pill = Instantiate(prefab, pos, Quaternion.Euler(0, 0, 0));
-        SpriteRenderer[] pillParts =  pill.GetComponentsInChildren<SpriteRenderer>();
-        pillParts[0].color = colors[Random.Range(0, colors.Length)];
-        pillParts[1].color = colors[Random.Range(0, colors.Length)];
-
-        float initial_y = 16.2f;
-        float initial_x = 4.5f;
-        Vector3 newPosition = new Vector3(initial_x, initial_y, 0);
-
-        pill.transform.parent = boardRenderer.transform;
-        pill.transform.position = newPosition;
+        pill.GetComponent<PillBehaviour>().CreatePill(transform);
         
     }
 }
