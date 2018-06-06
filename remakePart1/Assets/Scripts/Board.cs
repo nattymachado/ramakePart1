@@ -20,19 +20,19 @@ public class Board {
         }
     }
 
-    public void CheckCombinations(int horizontal_position, int vertical_position)
+    public List<SpriteRenderer> CheckCombinations(int horizontal_position, int vertical_position)
     {
         List<int[]> positions_with_same_color = CheckUpCombinations(horizontal_position, vertical_position);
         positions_with_same_color.AddRange(CheckDownCombinations(horizontal_position, vertical_position));
+        List<SpriteRenderer> positionsToDestroy = new List<SpriteRenderer>();
         if (positions_with_same_color.Count >= 3)
         {
             for(int position=0; position < positions_with_same_color.Count; position++)
             {
                 Debug.Log(positions_with_same_color[position][0]);
                 Debug.Log(positions_with_same_color[position][1]);
-                mainBoard[positions_with_same_color[position][0], positions_with_same_color[position][1]].sprite = null;
+                positionsToDestroy.Add(mainBoard[positions_with_same_color[position][0], positions_with_same_color[position][1]]);
                 mainBoard[positions_with_same_color[position][0], positions_with_same_color[position][1]] = null;
-
             }
             Debug.Log(horizontal_position);
             Debug.Log(vertical_position);
@@ -40,6 +40,7 @@ public class Board {
             mainBoard[horizontal_position, vertical_position] = null;
 
         }
+        return positionsToDestroy;
 
     }
 
@@ -88,12 +89,12 @@ public class Board {
 
     {
        
-        if (horizontal < 0 || horizontal > mainBoard.GetLength(0) || vertical < 0 || vertical > mainBoard.GetLength(1))
+        if (horizontal < 0 || horizontal >= mainBoard.GetLength(0) || vertical < 0 || vertical >= mainBoard.GetLength(1))
         {
             return false;
         } else
         {
-            return true;
+            return mainBoard[horizontal,vertical] ==  null;
         }
     }
 }

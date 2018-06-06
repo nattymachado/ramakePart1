@@ -5,6 +5,8 @@ using UnityEngine;
 public class BoardBehaviour : MonoBehaviour {
 
     public GameObject prefab;
+    public GameObject blueVirusPrefab;
+    public GameObject redVirusPrefab;
     public GameObject pill = null;
     private GameObject pillPart2 = null;
     private SpriteRenderer boardRenderer = null;
@@ -15,6 +17,7 @@ public class BoardBehaviour : MonoBehaviour {
 
     // Use this for initialization
     public void Start () {
+        CreateVirus();
         boardRenderer = GetComponent<SpriteRenderer>();
         for (int horizontal=0; horizontal < board.mainBoard.GetLength(0); horizontal++ )
         {
@@ -30,20 +33,32 @@ public class BoardBehaviour : MonoBehaviour {
         
         if (pill == null)
         { 
-            createNewPill();
+            CreateNewPill();
 
         }
         
-        
+
+
 
     }
 
-    private void createNewPill()
+
+    private void CreateVirus()
+    {
+        Vector3 pos = new Vector3(0f, 10f, 0);
+        GameObject blueVirus = Instantiate(blueVirusPrefab, pos, Quaternion.Euler(0, 0, 0));
+
+        pos = new Vector3(2f, 2f, 0);
+        GameObject redVirus = Instantiate(redVirusPrefab, pos, Quaternion.Euler(0, 0, 0));
+        }
+
+
+    private void CreateNewPill()
     {
         Vector3 pos = new Vector3(0, 0, 0);
-        Debug.Log("Creating new instance");
         pill = Instantiate(prefab, pos, Quaternion.Euler(0, 0, 0));
         pill.GetComponent<PillBehaviour>().CreatePill(transform);
         
     }
 }
+    
