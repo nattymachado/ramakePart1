@@ -46,10 +46,10 @@ public class BoardBehaviour : MonoBehaviour {
     private void CreateVirus()
     {
         Vector3 pos = new Vector3(0f, 10f, 0);
-        GameObject blueVirus = Instantiate(blueVirusPrefab, pos, Quaternion.Euler(0, 0, 0));
+        //GameObject blueVirus = Instantiate(blueVirusPrefab, pos, Quaternion.Euler(0, 0, 0));
 
         pos = new Vector3(2f, 2f, 0);
-        GameObject redVirus = Instantiate(redVirusPrefab, pos, Quaternion.Euler(0, 0, 0));
+        GameObject redVirus = Instantiate(blueVirusPrefab, pos, Quaternion.Euler(0, 0, 0));
         }
 
 

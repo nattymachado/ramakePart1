@@ -189,7 +189,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 865cbdbb935d8354994d7a8f5650fa58, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  initPillPosition: {x: 6.7, y: 19.6, z: 0}
+  initPillPosition: {x: 6.25, y: 20, z: 0}
   horizontalStateScale: {x: 0.34, y: 0.34, z: 0}
 --- !u!212 &212193232906813006
 SpriteRenderer:

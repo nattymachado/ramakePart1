@@ -63,9 +63,13 @@ public class PillBehaviour : MonoBehaviour {
         List<SpriteRenderer> positionsToDestroy = _parent_script.board.CheckCombinations(_horizontal_position[0], _vertical_position[0]);
         positionsToDestroy.AddRange(_parent_script.board.CheckCombinations(_horizontal_position[1], _vertical_position[1]));
 
-        /*for (int i=0; i < positionsToDestroy.Count; i++)
+        for (int i=0; i < positionsToDestroy.Count; i++)
         {
             Destroy(positionsToDestroy[i]);
+        }
+        /*if (positionsToDestroy.Count > 0)
+        {
+            _parent_script.board.RefreshBoard(positionsToDestroy);
         }*/
     }
 
@@ -107,6 +111,7 @@ public class PillBehaviour : MonoBehaviour {
             includeValuesOnBoard();
             Debug.Log(_horizontal_position[0] +"x"+ _vertical_position[0]);
             Debug.Log(_horizontal_position[1] + "x" + _vertical_position[1]);
+            _parent_script.board.SeeBoard();
             _parent_script.pill = null;
         }
     }
