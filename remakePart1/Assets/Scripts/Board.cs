@@ -4,7 +4,13 @@ using UnityEngine;
 
 public class Board {
 
-    public SpriteRenderer[,] mainBoard = new SpriteRenderer[16, 8];
+    public SpriteRenderer[,] mainBoard = new SpriteRenderer[Constants.Rows, Constants.Columns];
+    private Sprite transparentPill;
+
+    public Board(Sprite transparentPill)
+    {
+        this.transparentPill = transparentPill;
+    }
 
     public void SeeBoard()
     {
@@ -29,105 +35,171 @@ public class Board {
         }
     }
 
-    public List<SpriteRenderer> CheckCombinations(int horizontal_position, int vertical_position)
+    private IEnumerable<GameObject> GetMatches(int row, int column)
     {
-        List<int[]> positionsSameColor = new List<int[]>();
-        List<SpriteRenderer> positionsToDestroy = new List<SpriteRenderer>();
-        CheckUpCombinations(horizontal_position, vertical_position, positionsSameColor);
-        CheckDownCombinations(horizontal_position, vertical_position, positionsSameColor);
-        if (positionsSameColor.Count >= 2)
+        List<List<GameObject>> matches = new List<List<GameObject>>();
+        if (mainBoard[row, column] != null)
         {
-            for (int position = 0; position < positionsSameColor.Count; position++)
-            {
-                positionsToDestroy.Add(mainBoard[positionsSameColor[position][0], positionsSameColor[position][1]]);
-                mainBoard[positionsSameColor[position][0], positionsSameColor[position][1]] = null;
-            }
-            positionsToDestroy.Add(mainBoard[horizontal_position, vertical_position]);
-            mainBoard[horizontal_position, vertical_position] = null;
-
-        }
-        positionsSameColor = new List<int[]>();
-        CheckRightCombinations(horizontal_position, vertical_position, positionsSameColor);
-        CheckLeftCombinations(horizontal_position, vertical_position, positionsSameColor);
-
-        
-        if (positionsSameColor.Count >= 2)
-        {
-            for (int position = 0; position < positionsSameColor.Count; position++)
-            {
-                positionsToDestroy.Add(mainBoard[positionsSameColor[position][0], positionsSameColor[position][1]]);
-                mainBoard[positionsSameColor[position][0], positionsSameColor[position][1]] = null;
-            }
-            positionsToDestroy.Add(mainBoard[horizontal_position, vertical_position]);
-            mainBoard[horizontal_position, vertical_position] = null;
-
+            mainBoard[row, column].sprite = this.transparentPill;
         }
 
+        return null;
+    }
 
+    private IEnumerable<GameObject> RemoveMatchPills(int row, int column)
+    {
+        List<List<GameObject>> matches = new List<List<GameObject>>();
+        if (mainBoard[row, column] != null)
+        {
+            Transform pillTransform = mainBoard[row, column].transform.parent;
+            pillTransform.GetComponent<PillBehaviour>().Destroy();
+            mainBoard[row, column] = null;
+        }
 
-        return positionsToDestroy;
+        return null;
+    }
+
+    public IEnumerator CheckMatches(int row, int column)
+    {
+        GetMatches(row, column);
+        yield return new WaitForSeconds(Constants.WaitBeforePotentialMatchesCheck);
+        RemoveMatchPills(row, column);
+        /*potentialMatches = Utilities.GetPotentialMatches(shapes);
+        if (potentialMatches != null)
+        {
+            while (true)
+            {
+
+                AnimatePotentialMatchesCoroutine = Utilities.AnimatePotentialMatches(potentialMatches);
+                StartCoroutine(AnimatePotentialMatchesCoroutine);
+                yield return new WaitForSeconds(Constants.WaitBeforePotentialMatchesCheck);
+            }
+        }*/
+    }
+
+    public void CheckCombinations()
+    {
+
+        Debug.Log("Checking combinations");
+        /*List<int[]> positionsToDestroyHorizontal = new List<int[]>();
+        positionsToDestroyHorizontal.Add(new int[2] { horizontal_position, vertical_position });
+        CheckUpCombinations(horizontal_position, vertical_position, positionsToDestroyHorizontal);
+        CheckDownCombinations(horizontal_position, vertical_position, positionsToDestroyHorizontal);
+
+        List<int[]> positionsToDestroyVertical = new List<int[]>();
+        positionsToDestroyVertical.Add(new int[2] { horizontal_position, vertical_position });
+        CheckRightCombinations(horizontal_position, vertical_position, positionsToDestroyVertical);
+        CheckLeftCombinations(horizontal_position, vertical_position, positionsToDestroyVertical);
+
+        if (positionsToDestroyHorizontal.Count < 3)
+        {
+            positionsToDestroyHorizontal.Clear();
+        }
+
+        if (positionsToDestroyVertical.Count < 3)
+        {
+            positionsToDestroyVertical.Clear();
+        }
+
+        positionsToDestroyHorizontal.AddRange(positionsToDestroyVertical);
+
+        return positionsToDestroyHorizontal;*/
 
     }
 
-    public void RefreshBoard(List<SpriteRenderer> positionsToDestroy)
+    public void RefreshBoard(List<int[]> positionsToDestroy)
     {
-        int highestHorizontal = 0;
-        int verticalToCheck = 4;
-        
 
-        for (highestHorizontal = 0; highestHorizontal < 16; highestHorizontal++)
-        {
-            if (mainBoard[highestHorizontal, verticalToCheck] == null)
+        positionsToDestroy.Sort(
+            delegate (int[] p1, int[] p2)
             {
-                for (int i = highestHorizontal + 1; i < 16; i++)
+                if (p1[0] == p2[0])
+                    return p1[1].CompareTo(p2[1]);
+                else
+                    return p1[0].CompareTo(p2[0]);
+            });
+
+        /*for (int line = 0; line < positionsToDestroy.Count; line++)
+        {
+            Debug.Log(positionsToDestroy[line][0] + "X" + positionsToDestroy[line][1]);
+            int positionLineCheck = positionsToDestroy[line][0] + 1;
+            while (positionLineCheck < 16 && mainBoard[positionLineCheck, positionsToDestroy[line][1]] == null)
+            {
+                positionLineCheck += 1;
+            }
+            if (positionLineCheck < 16 && mainBoard[positionLineCheck, positionsToDestroy[line][1]] != null)
+            {
+                mainBoard[positionLineCheck, positionsToDestroy[line][1]].transform.position = new Vector3(mainBoard[positionLineCheck, positionsToDestroy[line][1]].transform.position.x, mainBoard[positionLineCheck, positionsToDestroy[line][1]].transform.position.y - 0.9f, mainBoard[positionLineCheck, positionsToDestroy[line][1]].transform.position.z);
+            }
+        }*/
+
+        int line = 0;
+        if (line < positionsToDestroy.Count)
+        {
+            Debug.Log(positionsToDestroy[line][0] + "X" + positionsToDestroy[line][1]);
+            int positionLineCheck = positionsToDestroy[line][0] + 1;
+            while (positionLineCheck < 16 && mainBoard[positionLineCheck, positionsToDestroy[line][1]] == null)
+            {
+                positionLineCheck += 1;
+            }
+            if (positionLineCheck < 16 && mainBoard[positionLineCheck, positionsToDestroy[line][1]] != null)
+            {
+                int newPosition = (positionLineCheck - positionsToDestroy[line][0]);
+                SpriteRenderer pill = mainBoard[positionLineCheck, positionsToDestroy[line][1]];
+                mainBoard[positionLineCheck, positionsToDestroy[line][1]] = null;
+                pill.transform.position = 
+                    new Vector3(pill.transform.position.x,
+                    pill.transform.position.y - (newPosition * 0.9f),
+                    pill.transform.position.z);
+                mainBoard[newPosition, positionsToDestroy[line][1]] = pill;
+
+
+            }
+
+        }
+
+        //int initLine = positionsToDestroy[0]
+
+
+        /*
+         * if (mainBoard[i, verticalToCheck] != null)
                 {
-                    if (mainBoard[i, verticalToCheck] != null)
-                    {
-                        Debug.Log("Achei a proxima com algo");
-                        mainBoard[i, verticalToCheck].transform.position = new Vector3(mainBoard[i, verticalToCheck].transform.position.x, mainBoard[i, verticalToCheck].transform.position.y - 1f, mainBoard[i, verticalToCheck].transform.position.z);
-                    }
-                }
-            }
+                    Debug.Log("Achei a proxima com algo");
+                    mainBoard[i, verticalToCheck].transform.position = new Vector3(mainBoard[i, verticalToCheck].transform.position.x, mainBoard[i, verticalToCheck].transform.position.y - 1f, mainBoard[i, verticalToCheck].transform.position.z);
+                }*/
 
-        }
 
-        
     }
 
-    public List<int[]> CheckUpCombinations(int horizontalPosition, int verticalPosition, List<int[]> positionsSameColor)
+    public void CheckUpCombinations(int horizontalPosition, int verticalPosition, List<int[]> positionsToDestroy)
     {
         int horizontal_index = horizontalPosition + 1;
         bool isSameColor = true;
-        Debug.Log("Horizontal:" + horizontalPosition);
-        Debug.Log("Vertical:" + verticalPosition);
         Color color = mainBoard[horizontalPosition,verticalPosition].color;
         
         while (horizontal_index < mainBoard.GetLength(0) && (isSameColor == true))
         {
             if (mainBoard[horizontal_index, verticalPosition] != null && mainBoard[horizontal_index, verticalPosition].color == color)
             {
-                positionsSameColor.Add(new int[2] { horizontal_index, verticalPosition });
+                positionsToDestroy.Add(new int[2] { horizontal_index, verticalPosition });
             } else
             {
                 isSameColor = true;
             }
             horizontal_index += 1;
         }
-        return positionsSameColor;
     }
 
-    public void CheckDownCombinations(int horizontalPosition, int verticalPosition, List<int[]> positionsSameColor)
+    public void CheckDownCombinations(int horizontalPosition, int verticalPosition, List<int[]> positionsToDestroy)
     {
         int horizontalIndex = horizontalPosition - 1;
         bool is_same_color = true;
-        Debug.Log("Horizontal:" + horizontalPosition);
-        Debug.Log("Vertical:" + verticalPosition);
         Color color = mainBoard[horizontalPosition, verticalPosition].color;
         while (horizontalIndex >= 0 && (is_same_color == true))
         {
             if (mainBoard[horizontalIndex, verticalPosition] != null && mainBoard[horizontalIndex, verticalPosition].color == color)
             {
-                positionsSameColor.Add(new int[2] { horizontalIndex, verticalPosition });
+                positionsToDestroy.Add(new int[2] { horizontalIndex, verticalPosition });
             }
             else
             {
@@ -137,18 +209,16 @@ public class Board {
         }
     }
 
-    public void CheckLeftCombinations(int horizontalPosition, int verticalPosition, List<int[]> positionsSameColor)
+    public void CheckLeftCombinations(int horizontalPosition, int verticalPosition, List<int[]> positionsToDestroy)
     {
         int verticalIndex = verticalPosition + 1;
         bool is_same_color = true;
-        Debug.Log("Horizontal:" + horizontalPosition);
-        Debug.Log("Vertical:" + verticalPosition);
         Color color = mainBoard[horizontalPosition, verticalPosition].color;
         while (verticalIndex < 8 && (is_same_color == true))
         {
             if (mainBoard[horizontalPosition, verticalIndex] != null && mainBoard[horizontalPosition, verticalIndex].color == color)
             {
-                positionsSameColor.Add(new int[2] { horizontalPosition, verticalIndex });
+                positionsToDestroy.Add(new int[2] { horizontalPosition, verticalIndex });
             }
             else
             {
@@ -158,18 +228,16 @@ public class Board {
         }
     }
 
-    public void CheckRightCombinations(int horizontalPosition, int verticalPosition, List<int[]> positionsSameColor)
+    public void CheckRightCombinations(int horizontalPosition, int verticalPosition, List<int[]> positionsToDestroy)
     {
         int verticalIndex = verticalPosition - 1;
         bool is_same_color = true;
-        Debug.Log("Horizontal:" + horizontalPosition);
-        Debug.Log("Vertical:" + verticalPosition);
         Color color = mainBoard[horizontalPosition, verticalPosition].color;
         while (verticalIndex >= 0 && (is_same_color == true))
         {
             if (mainBoard[horizontalPosition, verticalIndex] != null && mainBoard[horizontalPosition, verticalIndex].color == color)
             {
-                positionsSameColor.Add(new int[2] { horizontalPosition, verticalIndex });
+                positionsToDestroy.Add(new int[2] { horizontalPosition, verticalIndex });
             }
             else
             {
@@ -177,29 +245,6 @@ public class Board {
             }
             verticalIndex -= 1;
         }
-    }
-
-
-
-    public List<int[]> CheckCombinationsWithOrientation(int horizontalPosition, int verticalPosition, List<int[]> positionsSameColor)
-    {
-        int horizontal_index = horizontalPosition + 1;
-        bool isSameColor = true;
-        Color color = mainBoard[horizontalPosition, verticalPosition].color;
-
-        while (horizontal_index < mainBoard.GetLength(0) && (isSameColor == true))
-        {
-            if (mainBoard[horizontal_index, verticalPosition] != null && mainBoard[horizontal_index, verticalPosition].color == color)
-            {
-                positionsSameColor.Add(new int[2] { horizontal_index, verticalPosition });
-            }
-            else
-            {
-                isSameColor = true;
-            }
-            horizontal_index += 1;
-        }
-        return positionsSameColor;
     }
 
     public bool IsPositionEmpty(int horizontal, int vertical)
