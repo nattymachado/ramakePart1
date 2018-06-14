@@ -35,35 +35,98 @@ public class Board {
         }
     }
 
-    private IEnumerable<GameObject> GetMatches(int row, int column)
+    private void GetMatchesHorizontalRight(int row, int column, Color pillColor, List<int[]> matches)
     {
-        List<List<GameObject>> matches = new List<List<GameObject>>();
-        if (mainBoard[row, column] != null)
+        column += 1;
+        for (;column < Constants.Columns; column++)
         {
-            mainBoard[row, column].sprite = this.transparentPill;
+            if (mainBoard[row,column] != null && mainBoard[row, column].color == pillColor)
+            {
+                matches.Add(new int[2] { row, column });
+            } else
+            {
+                break;
+            }
         }
-
-        return null;
+        
     }
 
-    private IEnumerable<GameObject> RemoveMatchPills(int row, int column)
+    private void GetMatchesHorizontalLeft(int row, int column, Color pillColor, List<int[]> matches)
     {
-        List<List<GameObject>> matches = new List<List<GameObject>>();
-        if (mainBoard[row, column] != null)
+        column -= 1;
+        for (; column >= 0; column--)
         {
-            Transform pillTransform = mainBoard[row, column].transform.parent;
-            pillTransform.GetComponent<PillBehaviour>().Destroy();
-            mainBoard[row, column] = null;
+            if (mainBoard[row, column] != null && mainBoard[row, column].color == pillColor)
+            {
+                matches.Add(new int[2] { row, column });
+            }
+            else
+            {
+                break;
+            }
         }
 
-        return null;
     }
 
-    public IEnumerator CheckMatches(int row, int column)
+
+    private List<int[]> GetMatches(int row, int column)
     {
-        GetMatches(row, column);
-        yield return new WaitForSeconds(Constants.WaitBeforePotentialMatchesCheck);
-        RemoveMatchPills(row, column);
+
+        List<int[]> matches = new List<int[]>();
+        if (mainBoard[row, column])
+        {
+            matches.Add(new int[2] { row, column });
+            Color pillColor = mainBoard[row, column].color;
+            GetMatchesHorizontalRight(row, column, pillColor, matches);
+            GetMatchesHorizontalLeft(row, column, pillColor, matches);
+        }
+        if (matches.Count >= 3)
+        {
+            return matches;
+        } else
+        {
+            return null;
+        }
+        
+    }
+
+    private void UpdateSpriteOfMatches(List<int[]> matches)
+    {
+        
+        for ( int index=0; index < matches.Count; index++)
+        {
+            mainBoard[matches[index][0], matches[index][1]].sprite = this.transparentPill;
+        }
+    }
+
+    private void RemoveMatchPills(List<int[]> matches)
+    {
+
+        for (int index = 0; index < matches.Count; index++)
+        {
+            //Transform pillTransform = mainBoard[row, column].transform.parent;
+            //pillTransform.GetComponent<PillBehaviour>().Destroy();
+            //mainBoard[matches[index][0], matches[index][1]].sprite = null;
+            mainBoard[matches[index][0], matches[index][1]].GetComponent<PillPartBehaviour>().Destroy();
+            mainBoard[matches[index][0], matches[index][1]] = null;
+        }
+    }
+    
+
+    public IEnumerator CheckMatches(int[,] positions)
+    {
+        for (int index=0; index < positions.GetLength(0); index++)
+        {
+            List<int[]> matches = GetMatches(positions[index,0], positions[index, 1]);
+            if (matches != null)
+            {
+                UpdateSpriteOfMatches(matches);
+                yield return new WaitForSeconds(Constants.WaitBeforePotentialMatchesCheck);
+                RemoveMatchPills(matches);
+            } 
+            
+        }
+        
         /*potentialMatches = Utilities.GetPotentialMatches(shapes);
         if (potentialMatches != null)
         {

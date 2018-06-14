@@ -41,11 +41,8 @@ public class PillBehaviour : MonoBehaviour {
     public void StartCheckMatchesProcess()
     {
         StopCheckMatches();
-        StartCoroutine(_parentScript.board.CheckMatches(_positions[0, 0], _positions[0, 1]));
-        StartCoroutine(_parentScript.board.CheckMatches(_positions[1, 0], _positions[1, 1]));
+        StartCoroutine(_parentScript.board.CheckMatches(_positions));
     }
-
-
 
     // Use this for initialization
     public void Start () {
@@ -114,6 +111,8 @@ public class PillBehaviour : MonoBehaviour {
     public void StopPill()
     {
         _parentScript.IncludeValuesOnBoard(_pills, _positions);
+        Rigidbody2D rigidbody =  transform.GetComponent<Rigidbody2D>();
+        rigidbody.bodyType = RigidbodyType2D.Dynamic;
         _parentScript.pill = null;
     }
 
@@ -161,6 +160,7 @@ public class PillBehaviour : MonoBehaviour {
         _pills[1].sprite = pillRight;
         _pills[1].transform.position = new Vector3(_pills[1].transform.position.x + 0.95f, 
             _pills[1].transform.position.y + 0.9f, _pills[1].transform.position.z);
+        //BoxCollider2D boxCollider_pills[1].transform.GetComponent<BoxCollider2D>();
     }
 
     public void MovimentLeft()
