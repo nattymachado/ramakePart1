@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine.SceneManagement;
 using UnityEngine;
 
+
 public class player_selector : MonoBehaviour {
 
 	// Use this for initialization
@@ -15,7 +16,7 @@ public class player_selector : MonoBehaviour {
 
         if (Input.GetKeyDown(KeyCode.DownArrow))
         {
-            transform.position = new Vector3(transform.position.x, -2.65f, transform.position.z); 
+            transform.position = new Vector3(transform.position.x, -2.65f, transform.position.z);
         } else if (Input.GetKeyDown(KeyCode.UpArrow))
         {
             transform.position = new Vector3(transform.position.x, -1.975f, transform.position.z);
@@ -33,6 +34,5 @@ public class player_selector : MonoBehaviour {
             }
         }
     }
-
-
 }
+
