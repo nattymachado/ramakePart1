@@ -12,27 +12,66 @@ public class PillBehaviour : MonoBehaviour {
     public Sprite pillRight = null;
     public Sprite pillUp = null;
     public Sprite pillDown = null;
+    public bool alone = false;
+    public int[,] _positions = new int[2, 2];
 
     private float _totalTime;
     private float _pillPartSize = 0;
-    private SpriteRenderer[] _pills = null;
+    public SpriteRenderer[] _pills = null;
     private BoardBehaviour _parentScript = null;
     private SpriteRenderer _parent_sprite = null;
     private Quaternion _original_rotation;
-    private PillState _pill_state = 0;
+    public PillState _pill_state = 0;
     private float _period = 0;
     private int _horizontal_lenght = 0;
     private int _vertical_lenght = 0;
-    private int[,] _positions = new int[2, 2];
+    private int _pillId;
+    
 
-    enum PillState { HORIZONTAL_ONE, VERTICAL_ONE, HORIZONTAL_INVERTED, VERTICAL_INVERTED };
+    public enum PillState { HORIZONTAL_ONE, VERTICAL_ONE, HORIZONTAL_INVERTED, VERTICAL_INVERTED };
 
     delegate void RefreshBoardTrigger();
     RefreshBoardTrigger refreshBoardTrigger;
     private IEnumerator CheckMatchesCoroutine;
 
 
-    public void StopCheckMatches()
+    public void MovimentAfterStop()
+    {
+        if (_pills.Length > 0)
+        {
+            Debug.Log("Antes:" + _positions[0, 0] + "-" + _positions[0, 1]);
+            Debug.Log("Antes:" + _positions[1, 0] + "-" + _positions[1, 1]);
+            Debug.Log("Primeira: "+ (_parentScript.board.IsPositionEmpty(_positions[0, 0] - 1, _positions[0, 1])));
+            Debug.Log("Segunda:" + (_parentScript.board.IsPositionEmpty(_positions[1, 0] - 1, _positions[1, 1])));
+
+            while ((_parentScript.board.IsPositionEmpty(_positions[0, 0] - 1, _positions[0, 1]) || _pills[0] == null) &&
+                (_parentScript.board.IsPositionEmpty(_positions[1, 0] - 1, _positions[1, 1]) || _pills[1] == null))
+            {
+                if (_pills[0] != null)
+                {
+                    _parentScript.board.mainBoard[_positions[0, 0], _positions[0, 1]] = null;
+                    SumToPositionsPart0(-1, 0);
+                }
+                if (_pills[1] != null)
+                {
+                    _parentScript.board.mainBoard[_positions[1, 0], _positions[1, 1]] = null;
+                    SumToPositionsPart1(-1, 0);
+                }
+                transform.position = new Vector3(transform.position.x, transform.position.y - _pillPartSize, 0f);
+                Debug.Log("Estou aqui!");
+                Debug.Log(_pillId);
+                Debug.Log(_positions[0, 0] + "-" + _positions[0, 1]);
+                Debug.Log(_positions[1, 0] + "-" + _positions[1, 1]);
+            }
+
+            _parentScript.IncludeValuesOnBoard(_pills, _positions);
+            
+        }
+        
+
+    }
+
+        public void StopCheckMatches()
     {
         if (CheckMatchesCoroutine != null)
             StopCoroutine(CheckMatchesCoroutine);
@@ -47,6 +86,7 @@ public class PillBehaviour : MonoBehaviour {
     // Use this for initialization
     public void Start () {
         _pills = GetComponentsInChildren<SpriteRenderer>();
+
         _parentScript = transform.parent.GetComponent<BoardBehaviour>();
         _parent_sprite = transform.parent.GetComponent<SpriteRenderer>();
         _original_rotation = transform.rotation;
@@ -67,15 +107,30 @@ public class PillBehaviour : MonoBehaviour {
 
     public void CreatePill(Transform parent)
     {
+        _pillId = Random.Range(0, 2000);
         SpriteRenderer[] pillParts = GetComponentsInChildren<SpriteRenderer>();
         pillParts[0].color = _colors[Random.Range(0, _colors.Length)];
         pillParts[1].color = _colors[Random.Range(0, _colors.Length)];
+        pillParts[0].GetComponent<PillPartBehaviour>().pillId = _pillId;
+        pillParts[1].GetComponent<PillPartBehaviour>().pillId = _pillId;
         transform.parent = parent;
         transform.position = initPillPosition;
     }
 
 
-    
+    public void SumToPositionsPart0(int sumWithHorizontal, int sumWithVertical)
+    {
+        _positions[0, 0] += sumWithHorizontal;
+        _positions[0, 1] += sumWithVertical;
+    }
+
+    public void SumToPositionsPart1(int sumWithHorizontal, int sumWithVertical)
+    {
+        _positions[1, 0] += sumWithHorizontal;
+        _positions[1, 1] += sumWithVertical;
+    }
+
+
 
     public void SumToPositions(int sumWithHorizontal0, int sumWithVertical0, int sumWithHorizontal1, int sumWithVertical1)
     {
@@ -83,7 +138,7 @@ public class PillBehaviour : MonoBehaviour {
         _positions[1,0] += sumWithHorizontal1;
         _positions[0,1] += sumWithVertical0;
         _positions[1,1] += sumWithVertical1;
-    }   
+    }
 
     public void MovimentDown()
     {
@@ -105,14 +160,12 @@ public class PillBehaviour : MonoBehaviour {
         {
             refreshBoardTrigger();
         }
-        
+
     }
 
     public void StopPill()
     {
         _parentScript.IncludeValuesOnBoard(_pills, _positions);
-        Rigidbody2D rigidbody =  transform.GetComponent<Rigidbody2D>();
-        rigidbody.bodyType = RigidbodyType2D.Dynamic;
         _parentScript.pill = null;
     }
 
@@ -139,7 +192,6 @@ public class PillBehaviour : MonoBehaviour {
             else
             {
                 _parentScript.IncludeValuesOnBoard(_pills, _positions);
-                _parentScript.board.SeeBoard();
                 _parentScript.pill = null;
             }
         }
@@ -158,7 +210,7 @@ public class PillBehaviour : MonoBehaviour {
     {
         _pills[0].sprite = pillLeft;
         _pills[1].sprite = pillRight;
-        _pills[1].transform.position = new Vector3(_pills[1].transform.position.x + 0.95f, 
+        _pills[1].transform.position = new Vector3(_pills[1].transform.position.x + 0.95f,
             _pills[1].transform.position.y + 0.9f, _pills[1].transform.position.z);
         //BoxCollider2D boxCollider_pills[1].transform.GetComponent<BoxCollider2D>();
     }
@@ -186,14 +238,14 @@ public class PillBehaviour : MonoBehaviour {
     // Update is called once per frame
     public void Update () {
         _totalTime += Time.deltaTime;
-        
+
         if ( _parentScript.pill != null &&_parentScript.pill.transform == transform)
         {
-            
+
             MovimentDown();
             HorizontalMove();
             VerticalMove();
-              
+
         }
         //Debug.Log(_horizontal_position[0] +"x"+ _vertical_position[0]);
         //Debug.Log(_horizontal_position[1] + "x" + _vertical_position[1]);
@@ -233,7 +285,7 @@ public class PillBehaviour : MonoBehaviour {
 
     public void MovimentRotateVerticalOne()
     {
-        
+
         if (_parentScript.board.IsPositionEmpty(_positions[1, 0] - 1, _positions[1, 1] - 1))
         {
 
@@ -247,7 +299,7 @@ public class PillBehaviour : MonoBehaviour {
 
             _pill_state = PillState.VERTICAL_ONE;
         }
-    }   
+    }
 
     public void VerticalMove()
     {
@@ -264,12 +316,12 @@ public class PillBehaviour : MonoBehaviour {
             }
 
             Debug.Log("Fim ---------------------------------------------");
-            
+
 
         }
-        
+
 
     }
 
-    
+
 }

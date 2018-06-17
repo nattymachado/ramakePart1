@@ -6,33 +6,11 @@ public class Board {
 
     public SpriteRenderer[,] mainBoard = new SpriteRenderer[Constants.Rows, Constants.Columns];
     private Sprite transparentPill;
+    
 
     public Board(Sprite transparentPill)
     {
         this.transparentPill = transparentPill;
-    }
-
-    public void SeeBoard()
-    {
-        string data = "";
-        Debug.Log(mainBoard.GetLength(1));
-        Debug.Log(mainBoard.GetLength(0));
-        for (int horizontal = 0; horizontal < mainBoard.GetLength(0); horizontal++)
-        {
-            data = "";
-            for (int vertical = 0; vertical < mainBoard.GetLength(1); vertical++)
-            {
-                if (mainBoard[horizontal, vertical])
-                {
-                    data = data + "|" + mainBoard[horizontal, vertical].color;
-                } else
-                {
-                    data = data + "|" + " ";
-                }
-               
-            }
-            Debug.Log(data);
-        }
     }
 
     private void GetMatchesHorizontalRight(int row, int column, Color pillColor, List<int[]> matches)
@@ -40,9 +18,21 @@ public class Board {
         column += 1;
         for (;column < Constants.Columns; column++)
         {
-            if (mainBoard[row,column] != null && mainBoard[row, column].color == pillColor)
+            if (mainBoard[row,column] != null)
             {
-                matches.Add(new int[2] { row, column });
+                Color itemColor = mainBoard[row, column].color;
+                if (itemColor == Color.white)
+                {
+                    itemColor = mainBoard[row, column].GetComponent<VirusBehaviour>().color;
+                }
+                if (itemColor == pillColor)
+                {
+                    matches.Add(new int[2] { row, column });
+                }
+                else
+                {
+                    break;
+                }
             } else
             {
                 break;
@@ -56,9 +46,21 @@ public class Board {
         column -= 1;
         for (; column >= 0; column--)
         {
-            if (mainBoard[row, column] != null && mainBoard[row, column].color == pillColor)
+            if (mainBoard[row, column] != null)
             {
-                matches.Add(new int[2] { row, column });
+                Color itemColor = mainBoard[row, column].color;
+                if (itemColor == Color.white)
+                {
+                    itemColor = mainBoard[row, column].GetComponent<VirusBehaviour>().color;
+                }
+                if (itemColor == pillColor)
+                {
+                    matches.Add(new int[2] { row, column });
+                }
+                else
+                {
+                    break;
+                }
             }
             else
             {
@@ -68,8 +70,66 @@ public class Board {
 
     }
 
+    private void GetMatchesVerticalDown(int row, int column, Color pillColor, List<int[]> matches)
+    {
+        row -= 1;
+        for (; row >= 0; row--)
+        {
+            if (mainBoard[row, column] != null)
+            {
+                Color itemColor = mainBoard[row, column].color;
+                if (itemColor == Color.white)
+                {
+                    itemColor = mainBoard[row, column].GetComponent<VirusBehaviour>().color;
+                }
+                if (itemColor == pillColor)
+                {
+                    matches.Add(new int[2] { row, column });
+                }
+                else
+                {
+                    break;
+                }
+            }
+            else
+            {
+                break;
+            }
+        }
 
-    private List<int[]> GetMatches(int row, int column)
+    }
+
+    private void GetMatchesVerticalUp(int row, int column, Color pillColor, List<int[]> matches)
+    {
+        row += 1;
+        for (; row < Constants.Rows; row++)
+        {
+            if (mainBoard[row, column] != null )
+            {
+                Color itemColor = mainBoard[row, column].color;
+                if (itemColor == Color.white)
+                {
+                    itemColor = mainBoard[row, column].GetComponent<VirusBehaviour>().color;
+                }
+                if (itemColor == pillColor)
+                {
+                    matches.Add(new int[2] { row, column });
+                } else
+                {
+                    break;
+                }
+
+            } else
+                {
+                    break;
+                }
+            }
+
+    }
+
+
+
+    private List<int[]> GetMatchesHorizontal(int row, int column)
     {
 
         List<int[]> matches = new List<int[]>();
@@ -87,7 +147,27 @@ public class Board {
         {
             return null;
         }
-        
+    }
+
+    private List<int[]> GetMatchesVertical(int row, int column)
+    {
+
+        List<int[]> matches = new List<int[]>();
+        if (mainBoard[row, column])
+        {
+            matches.Add(new int[2] { row, column });
+            Color pillColor = mainBoard[row, column].color;
+            GetMatchesVerticalUp(row, column, pillColor, matches);
+            GetMatchesVerticalDown(row, column, pillColor, matches);
+        }
+        if (matches.Count >= 3)
+        {
+            return matches;
+        }
+        else
+        {
+            return null;
+        }
     }
 
     private void UpdateSpriteOfMatches(List<int[]> matches)
@@ -104,134 +184,45 @@ public class Board {
 
         for (int index = 0; index < matches.Count; index++)
         {
-            //Transform pillTransform = mainBoard[row, column].transform.parent;
-            //pillTransform.GetComponent<PillBehaviour>().Destroy();
-            //mainBoard[matches[index][0], matches[index][1]].sprite = null;
-            mainBoard[matches[index][0], matches[index][1]].GetComponent<PillPartBehaviour>().Destroy();
-            mainBoard[matches[index][0], matches[index][1]] = null;
+            PillPartBehaviour pillPart = mainBoard[matches[index][0], matches[index][1]].GetComponent<PillPartBehaviour>();
+            if (pillPart == null)
+            {
+                mainBoard[matches[index][0], matches[index][1]].enabled = false;
+            }
+
+                mainBoard[matches[index][0], matches[index][1]] = null;
+
+            if (pillPart != null)
+            {
+                PillBehaviour pillBehaviour = pillPart.transform.parent.GetComponent<PillBehaviour>();
+                pillPart.Destroy();
+            }
         }
     }
     
 
     public IEnumerator CheckMatches(int[,] positions)
     {
-        for (int index=0; index < positions.GetLength(0); index++)
+        for (int index = 0; index < positions.GetLength(0); index++)
         {
-            List<int[]> matches = GetMatches(positions[index,0], positions[index, 1]);
-            if (matches != null)
-            {
-                UpdateSpriteOfMatches(matches);
-                yield return new WaitForSeconds(Constants.WaitBeforePotentialMatchesCheck);
-                RemoveMatchPills(matches);
-            } 
+            List<int[]> matchesHorizontal = GetMatchesHorizontal(positions[index, 0], positions[index, 1]);
+            List<int[]> matchesVertical = GetMatchesVertical(positions[index, 0], positions[index, 1]);
             
-        }
-        
-        /*potentialMatches = Utilities.GetPotentialMatches(shapes);
-        if (potentialMatches != null)
-        {
-            while (true)
+            if (matchesHorizontal != null)
             {
-
-                AnimatePotentialMatchesCoroutine = Utilities.AnimatePotentialMatches(potentialMatches);
-                StartCoroutine(AnimatePotentialMatchesCoroutine);
+                UpdateSpriteOfMatches(matchesHorizontal);
                 yield return new WaitForSeconds(Constants.WaitBeforePotentialMatchesCheck);
+                RemoveMatchPills(matchesHorizontal);
             }
-        }*/
-    }
 
-    public void CheckCombinations()
-    {
-
-        Debug.Log("Checking combinations");
-        /*List<int[]> positionsToDestroyHorizontal = new List<int[]>();
-        positionsToDestroyHorizontal.Add(new int[2] { horizontal_position, vertical_position });
-        CheckUpCombinations(horizontal_position, vertical_position, positionsToDestroyHorizontal);
-        CheckDownCombinations(horizontal_position, vertical_position, positionsToDestroyHorizontal);
-
-        List<int[]> positionsToDestroyVertical = new List<int[]>();
-        positionsToDestroyVertical.Add(new int[2] { horizontal_position, vertical_position });
-        CheckRightCombinations(horizontal_position, vertical_position, positionsToDestroyVertical);
-        CheckLeftCombinations(horizontal_position, vertical_position, positionsToDestroyVertical);
-
-        if (positionsToDestroyHorizontal.Count < 3)
-        {
-            positionsToDestroyHorizontal.Clear();
-        }
-
-        if (positionsToDestroyVertical.Count < 3)
-        {
-            positionsToDestroyVertical.Clear();
-        }
-
-        positionsToDestroyHorizontal.AddRange(positionsToDestroyVertical);
-
-        return positionsToDestroyHorizontal;*/
-
-    }
-
-    public void RefreshBoard(List<int[]> positionsToDestroy)
-    {
-
-        positionsToDestroy.Sort(
-            delegate (int[] p1, int[] p2)
+            if (matchesVertical != null)
             {
-                if (p1[0] == p2[0])
-                    return p1[1].CompareTo(p2[1]);
-                else
-                    return p1[0].CompareTo(p2[0]);
-            });
-
-        /*for (int line = 0; line < positionsToDestroy.Count; line++)
-        {
-            Debug.Log(positionsToDestroy[line][0] + "X" + positionsToDestroy[line][1]);
-            int positionLineCheck = positionsToDestroy[line][0] + 1;
-            while (positionLineCheck < 16 && mainBoard[positionLineCheck, positionsToDestroy[line][1]] == null)
-            {
-                positionLineCheck += 1;
-            }
-            if (positionLineCheck < 16 && mainBoard[positionLineCheck, positionsToDestroy[line][1]] != null)
-            {
-                mainBoard[positionLineCheck, positionsToDestroy[line][1]].transform.position = new Vector3(mainBoard[positionLineCheck, positionsToDestroy[line][1]].transform.position.x, mainBoard[positionLineCheck, positionsToDestroy[line][1]].transform.position.y - 0.9f, mainBoard[positionLineCheck, positionsToDestroy[line][1]].transform.position.z);
-            }
-        }*/
-
-        int line = 0;
-        if (line < positionsToDestroy.Count)
-        {
-            Debug.Log(positionsToDestroy[line][0] + "X" + positionsToDestroy[line][1]);
-            int positionLineCheck = positionsToDestroy[line][0] + 1;
-            while (positionLineCheck < 16 && mainBoard[positionLineCheck, positionsToDestroy[line][1]] == null)
-            {
-                positionLineCheck += 1;
-            }
-            if (positionLineCheck < 16 && mainBoard[positionLineCheck, positionsToDestroy[line][1]] != null)
-            {
-                int newPosition = (positionLineCheck - positionsToDestroy[line][0]);
-                SpriteRenderer pill = mainBoard[positionLineCheck, positionsToDestroy[line][1]];
-                mainBoard[positionLineCheck, positionsToDestroy[line][1]] = null;
-                pill.transform.position = 
-                    new Vector3(pill.transform.position.x,
-                    pill.transform.position.y - (newPosition * 0.9f),
-                    pill.transform.position.z);
-                mainBoard[newPosition, positionsToDestroy[line][1]] = pill;
-
-
+                UpdateSpriteOfMatches(matchesVertical);
+                yield return new WaitForSeconds(Constants.WaitBeforePotentialMatchesCheck);
+                RemoveMatchPills(matchesVertical);
             }
 
         }
-
-        //int initLine = positionsToDestroy[0]
-
-
-        /*
-         * if (mainBoard[i, verticalToCheck] != null)
-                {
-                    Debug.Log("Achei a proxima com algo");
-                    mainBoard[i, verticalToCheck].transform.position = new Vector3(mainBoard[i, verticalToCheck].transform.position.x, mainBoard[i, verticalToCheck].transform.position.y - 1f, mainBoard[i, verticalToCheck].transform.position.z);
-                }*/
-
-
     }
 
     public void CheckUpCombinations(int horizontalPosition, int verticalPosition, List<int[]> positionsToDestroy)
@@ -314,7 +305,7 @@ public class Board {
 
     {
        
-        if (horizontal < 0 || horizontal >= mainBoard.GetLength(0) || vertical < 0 || vertical >= mainBoard.GetLength(1))
+        if (horizontal < 0 || horizontal >= Constants.Rows || vertical < 0 || vertical >= Constants.Columns)
         {
             return false;
         } else

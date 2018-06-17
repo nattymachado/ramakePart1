@@ -21,7 +21,7 @@ public class BoardBehaviour : MonoBehaviour {
 
     // Use this for initialization
     public void Start () {
-        CreateVirus();
+        
         boardRenderer = GetComponent<SpriteRenderer>();
         this.board = new Board(transparentPill);
         for (int horizontal=0; horizontal < board.mainBoard.GetLength(0); horizontal++ )
@@ -31,6 +31,7 @@ public class BoardBehaviour : MonoBehaviour {
                 board.mainBoard[horizontal,vertical] = null;
             }
         }
+        CreateVirus();
     }
     
 	// Update is called once per frame
@@ -47,14 +48,30 @@ public class BoardBehaviour : MonoBehaviour {
 
     private void CreateVirus()
     {
-        Vector3 pos = new Vector3(0f, 10f, 0);
-        GameObject blueVirus = Instantiate(blueVirusPrefab, pos, Quaternion.Euler(0, 0, 0));
+        int quantityBlueVirus = Random.Range(1, 4);
+        float virusSize = 0.9f;
+        float initPositionRows = 3.3f;
+        float initPositionColumns = -2.7f;
+        int positionRow = 0;
+        int positionColumn = 0;
+        for (int i=0; i<quantityBlueVirus; i++)
+        {
+            positionColumn = (Random.Range(0, (Constants.Columns - 1)));
+            positionRow = (Random.Range(0, (Constants.Rows - 1)));
+            Vector3 pos = new Vector3(virusSize * positionColumn + initPositionColumns, virusSize * positionRow + initPositionRows, 0);
+            GameObject blueVirus = Instantiate(blueVirusPrefab, pos, Quaternion.Euler(0, 0, 0));
+            blueVirus.transform.parent = transform;
 
-        pos = new Vector3(2f, 2f, 0);
+            board.mainBoard[positionRow, positionColumn] = blueVirus.GetComponent<SpriteRenderer>();
+        }
+        
+
+        /*pos = new Vector3(2f, 2f, 0);
         GameObject redVirus = Instantiate(redVirusPrefab, pos, Quaternion.Euler(0, 0, 0));
 
         pos = new Vector3(4f, 4f, 0);
         GameObject yellowVirus = Instantiate(yellowVirusPrefab, pos, Quaternion.Euler(0, 0, 0));
+        */
     }
 
 
@@ -68,10 +85,17 @@ public class BoardBehaviour : MonoBehaviour {
 
     public void IncludeValuesOnBoard(SpriteRenderer[] pills, int[,] positions)
     {
-
-
-        board.mainBoard[positions[0,0], positions[0, 1]] = pills[0];
-        board.mainBoard[positions[1, 0], positions[1, 1]] = pills[1];
+        
+        if (pills[0] != null)
+        {
+            Debug.Log("Part 1" + positions[0, 0] + "-" + positions[0, 1]);
+            board.mainBoard[positions[0, 0], positions[0, 1]] = pills[0];
+        }
+        if (pills[1] != null)
+        {
+            Debug.Log("Part 2" + positions[1, 0] + "-" + positions[1, 1]);
+            board.mainBoard[positions[1, 0], positions[1, 1]] = pills[1];
+        }
     }
 
 
