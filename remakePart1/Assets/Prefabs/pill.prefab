@@ -210,6 +210,7 @@ MonoBehaviour:
   pillOnePartSprite: {fileID: 21300000, guid: 690667e7f5dc5b54bbc8669c60236c2c, type: 3}
   pillId: 0
   pillPartIndex: 0
+  isDestroyed: 0
 --- !u!114 &114689629752659878
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -221,6 +222,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 865cbdbb935d8354994d7a8f5650fa58, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _colors:
+  - {r: 1, g: 0.17254902, b: 0.34901962, a: 1}
+  - {r: 1, g: 0.6313726, b: 0.105882354, a: 1}
+  - {r: 0, g: 0.5686275, b: 0.9843137, a: 1}
   initPillPosition: {x: 6.25, y: 20, z: 0}
   pillLeft: {fileID: 21300000, guid: 7964f4be3b81dca408ee0459582872b5, type: 3}
   pillRight: {fileID: 21300000, guid: cfc4c932fdc40cf4198c4ec87480536d, type: 3}
@@ -243,6 +248,7 @@ MonoBehaviour:
   pillOnePartSprite: {fileID: 21300000, guid: 690667e7f5dc5b54bbc8669c60236c2c, type: 3}
   pillId: 0
   pillPartIndex: 1
+  isDestroyed: 0
 --- !u!212 &212193232906813006
 SpriteRenderer:
   m_ObjectHideFlags: 1

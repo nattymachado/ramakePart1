@@ -6,7 +6,7 @@ using UnityEngine;
 
 public class PillBehaviour : MonoBehaviour {
 
-    private Color[] _colors = new Color[] { Color.red, Color.yellow, Color.cyan };
+    public Color[] _colors = new Color[] { new Color(255,161,27,255), new Color(0, 145, 251,255), new Color(255, 44, 89,255) };
     public Vector3 initPillPosition = new Vector3();
     public Sprite pillLeft = null;
     public Sprite pillRight = null;
@@ -64,8 +64,11 @@ public class PillBehaviour : MonoBehaviour {
                 Debug.Log(_positions[1, 0] + "-" + _positions[1, 1]);
             }
 
+
             _parentScript.IncludeValuesOnBoard(_pills, _positions);
-            
+            StartCheckMatchesProcess();
+
+
         }
         
 
@@ -79,8 +82,12 @@ public class PillBehaviour : MonoBehaviour {
 
     public void StartCheckMatchesProcess()
     {
-        StopCheckMatches();
-        StartCoroutine(_parentScript.board.CheckMatches(_positions));
+        if (!_parentScript.endGame)
+        {
+            StopCheckMatches();
+            StartCoroutine(_parentScript.board.CheckMatches(_positions));
+        }
+        
     }
 
     // Use this for initialization
@@ -174,25 +181,14 @@ public class PillBehaviour : MonoBehaviour {
         if (Input.GetKeyDown(KeyCode.DownArrow))
         {
             if (_parentScript.board.IsPositionEmpty(_positions[0, 0] - 1, _positions[0, 1]) &&
-                _parentScript.board.IsPositionEmpty(_positions[1, 0] - 1, _positions[1, 1]))
+            _parentScript.board.IsPositionEmpty(_positions[1, 0] - 1, _positions[1, 1]))
             {
-                //if (_period > _parentScript.wait_for_moviment)
-                //{
                 transform.position = new Vector3(transform.position.x, transform.position.y - _pillPartSize, 0f);
-                //_horizontal_position[0] = nextHorizontalPosition[0];
-                //_horizontal_position[1] = nextHorizontalPosition[1];
                 SumToPositions(-1, 0, -1, 0);
-                _period = 0;
-                //}
-                //else
-                //{
-                //  _period += Time.deltaTime;
-                //}
             }
             else
             {
-                _parentScript.IncludeValuesOnBoard(_pills, _positions);
-                _parentScript.pill = null;
+                refreshBoardTrigger();
             }
         }
 
@@ -245,7 +241,7 @@ public class PillBehaviour : MonoBehaviour {
             MovimentDown();
             HorizontalMove();
             VerticalMove();
-
+            MovimentDownWithKey();
         }
         //Debug.Log(_horizontal_position[0] +"x"+ _vertical_position[0]);
         //Debug.Log(_horizontal_position[1] + "x" + _vertical_position[1]);

@@ -14,8 +14,11 @@ public class BoardBehaviour : MonoBehaviour {
     private SpriteRenderer boardRenderer = null;
     public float wait_for_moviment = 0.5f;
     public Board board;
+    public bool endGame = false;
+    private int quatityVirus = 0;
+    private readonly int lastPosition = (Constants.Rows - 1);
 
-    
+
 
 
 
@@ -31,40 +34,70 @@ public class BoardBehaviour : MonoBehaviour {
                 board.mainBoard[horizontal,vertical] = null;
             }
         }
-        CreateVirus();
+        CreateAllVirus();
     }
     
 	// Update is called once per frame
 	public void Update () {
-        
-        if (pill == null)
+        if (board.killedVirus == quatityVirus)
+        {
+            endGame = true;
+            GameObject gos = GameObject.FindGameObjectWithTag("win");
+            gos.GetComponent<SpriteRenderer>().enabled = true;
+        } else if (endGame)
+        {
+            GameObject gos = GameObject.FindGameObjectWithTag("lose");
+            gos.GetComponent<SpriteRenderer>().enabled = true;
+        }
+
+        if (pill == null && !endGame)
         { 
             CreateNewPill();
 
         }
     }
 
-    
-
-    private void CreateVirus()
+    private void CreateVirus(GameObject virusPrefab)
     {
-        int quantityBlueVirus = Random.Range(1, 4);
         float virusSize = 0.9f;
         float initPositionRows = 3.3f;
         float initPositionColumns = -2.7f;
         int positionRow = 0;
         int positionColumn = 0;
-        for (int i=0; i<quantityBlueVirus; i++)
+
+        positionColumn = (Random.Range(0, (Constants.Columns - 1)));
+        positionRow = (Random.Range(0, (Constants.Rows - 5)));
+        while  (board.mainBoard[positionRow, positionColumn] != null)
         {
             positionColumn = (Random.Range(0, (Constants.Columns - 1)));
-            positionRow = (Random.Range(0, (Constants.Rows - 1)));
-            Vector3 pos = new Vector3(virusSize * positionColumn + initPositionColumns, virusSize * positionRow + initPositionRows, 0);
-            GameObject blueVirus = Instantiate(blueVirusPrefab, pos, Quaternion.Euler(0, 0, 0));
-            blueVirus.transform.parent = transform;
-
-            board.mainBoard[positionRow, positionColumn] = blueVirus.GetComponent<SpriteRenderer>();
+            positionRow = (Random.Range(0, (Constants.Rows - 5)));
         }
-        
+        Vector3 pos = new Vector3(virusSize * positionColumn + initPositionColumns, virusSize * positionRow + initPositionRows, 0);
+        GameObject virus = Instantiate(virusPrefab, pos, Quaternion.Euler(0, 0, 0));
+        virus.transform.parent = transform;
+
+        board.mainBoard[positionRow, positionColumn] = virus.GetComponent<SpriteRenderer>();
+    }
+
+    private void CreateAllVirus()
+    {
+        int quantityBlueVirus = Random.Range(1, 3);
+        int quantityRedVirus = Random.Range(1, 3);
+        int quantityYellowVirus = Random.Range(1, 3);
+        quatityVirus = quantityBlueVirus + quantityRedVirus + quantityYellowVirus;
+
+        for (int i=0; i<quantityBlueVirus; i++)
+        {
+            CreateVirus(blueVirusPrefab);
+        }
+        for (int i = 0; i < quantityRedVirus; i++)
+        {
+            CreateVirus(redVirusPrefab);
+        }
+        for (int i = 0; i < quantityYellowVirus; i++)
+        {
+            CreateVirus(yellowVirusPrefab);
+        }
 
         /*pos = new Vector3(2f, 2f, 0);
         GameObject redVirus = Instantiate(redVirusPrefab, pos, Quaternion.Euler(0, 0, 0));
@@ -86,6 +119,11 @@ public class BoardBehaviour : MonoBehaviour {
     public void IncludeValuesOnBoard(SpriteRenderer[] pills, int[,] positions)
     {
         
+        if (positions[0, 0] ==  Constants.Rows || positions[1, 0] == Constants.Rows)
+        {
+            endGame = true;
+            return;
+        }
         if (pills[0] != null)
         {
             Debug.Log("Part 1" + positions[0, 0] + "-" + positions[0, 1]);

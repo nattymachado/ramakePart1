@@ -6,6 +6,7 @@ public class Board {
 
     public SpriteRenderer[,] mainBoard = new SpriteRenderer[Constants.Rows, Constants.Columns];
     private Sprite transparentPill;
+    public int killedVirus = 0;
     
 
     public Board(Sprite transparentPill)
@@ -184,19 +185,24 @@ public class Board {
 
         for (int index = 0; index < matches.Count; index++)
         {
-            PillPartBehaviour pillPart = mainBoard[matches[index][0], matches[index][1]].GetComponent<PillPartBehaviour>();
-            if (pillPart == null)
+            if (mainBoard[matches[index][0], matches[index][1]] != null)
             {
-                mainBoard[matches[index][0], matches[index][1]].enabled = false;
-            }
+                PillPartBehaviour pillPart = mainBoard[matches[index][0], matches[index][1]].GetComponent<PillPartBehaviour>();
+                if (pillPart == null)
+                {
+                    mainBoard[matches[index][0], matches[index][1]].GetComponent<VirusBehaviour>().Destroy();
+                    killedVirus += 1;
+                }
 
                 mainBoard[matches[index][0], matches[index][1]] = null;
 
-            if (pillPart != null)
-            {
-                PillBehaviour pillBehaviour = pillPart.transform.parent.GetComponent<PillBehaviour>();
-                pillPart.Destroy();
+                if (pillPart != null)
+                {
+                    PillBehaviour pillBehaviour = pillPart.transform.parent.GetComponent<PillBehaviour>();
+                    pillPart.Destroy();
+                }
             }
+            
         }
     }
     

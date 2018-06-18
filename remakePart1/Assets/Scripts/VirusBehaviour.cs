@@ -6,4 +6,11 @@ using UnityEngine;
 public class VirusBehaviour : MonoBehaviour {
 
     public Color color;
+
+    public void Destroy()
+    {
+        Destroy(transform.gameObject);
+    }
+
 }
+
