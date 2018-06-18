@@ -35,7 +35,7 @@ public class PillBehaviour : MonoBehaviour {
     private IEnumerator CheckMatchesCoroutine;
 
 
-    public void MovimentAfterStop()
+    public IEnumerator MovimentAfterStop()
     {
         if (_pills.Length > 0)
         {
@@ -43,7 +43,7 @@ public class PillBehaviour : MonoBehaviour {
             Debug.Log("Antes:" + _positions[1, 0] + "-" + _positions[1, 1]);
             Debug.Log("Primeira: "+ (_parentScript.board.IsPositionEmpty(_positions[0, 0] - 1, _positions[0, 1])));
             Debug.Log("Segunda:" + (_parentScript.board.IsPositionEmpty(_positions[1, 0] - 1, _positions[1, 1])));
-
+            yield return new WaitForSeconds(0);
             while ((_parentScript.board.IsPositionEmpty(_positions[0, 0] - 1, _positions[0, 1]) || _pills[0] == null) &&
                 (_parentScript.board.IsPositionEmpty(_positions[1, 0] - 1, _positions[1, 1]) || _pills[1] == null))
             {

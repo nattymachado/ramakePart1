@@ -39,7 +39,7 @@ public void OnTriggerExit2D(Collider2D other)
                 Debug.Log("IsDestroyed: " + isDestroyed);
                 
             }
-            pillBehaviour.MovimentAfterStop();
+            StartCoroutine(pillBehaviour.MovimentAfterStop());
 
         }
     }
