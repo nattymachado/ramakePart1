@@ -22,7 +22,7 @@ GameObject:
   - component: {fileID: 212350614792743566}
   - component: {fileID: 61882636823022832}
   - component: {fileID: 50520123410168644}
-  - component: {fileID: 114925530986836776}
+  - component: {fileID: 114856374152643776}
   m_Layer: 0
   m_Name: part2
   m_TagString: Untagged
@@ -41,7 +41,7 @@ GameObject:
   - component: {fileID: 212193232906813006}
   - component: {fileID: 50803014379962914}
   - component: {fileID: 61741666240123248}
-  - component: {fileID: 114655802706038934}
+  - component: {fileID: 114211930364139856}
   m_Layer: 0
   m_Name: part1
   m_TagString: Untagged
@@ -57,7 +57,6 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4983085840492316}
-  - component: {fileID: 114689629752659878}
   m_Layer: 0
   m_Name: pill
   m_TagString: Untagged
@@ -196,7 +195,7 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.33787107, y: 0.3400002}
   m_EdgeRadius: 0
---- !u!114 &114655802706038934
+--- !u!114 &114211930364139856
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -204,37 +203,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1547396828347124}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7c3180e0bd8a4704c8614afc79d54165, type: 3}
+  m_Script: {fileID: 11500000, guid: 7fac8dfbd700766428d799d2f4f2d506, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pillOnePartSprite: {fileID: 21300000, guid: 690667e7f5dc5b54bbc8669c60236c2c, type: 3}
-  pillId: 0
-  pillPartIndex: 0
-  isDestroyed: 0
---- !u!114 &114689629752659878
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1953149765961160}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 865cbdbb935d8354994d7a8f5650fa58, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _colors:
-  - {r: 1, g: 0.17254902, b: 0.34901962, a: 1}
-  - {r: 1, g: 0.6313726, b: 0.105882354, a: 1}
-  - {r: 0, g: 0.5686275, b: 0.9843137, a: 1}
-  initPillPosition: {x: 6.25, y: 20, z: 0}
-  pillLeft: {fileID: 21300000, guid: 7964f4be3b81dca408ee0459582872b5, type: 3}
-  pillRight: {fileID: 21300000, guid: cfc4c932fdc40cf4198c4ec87480536d, type: 3}
-  pillUp: {fileID: 21300000, guid: 863400f99df3170478745a926ef37e85, type: 3}
-  pillDown: {fileID: 21300000, guid: c02ab3244ef90c84abf6e9770658bc6b, type: 3}
-  alone: 0
-  _pills: []
-  _pill_state: 0
---- !u!114 &114925530986836776
+--- !u!114 &114856374152643776
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -242,13 +214,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 1260012329129310}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7c3180e0bd8a4704c8614afc79d54165, type: 3}
+  m_Script: {fileID: 11500000, guid: 7fac8dfbd700766428d799d2f4f2d506, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pillOnePartSprite: {fileID: 21300000, guid: 690667e7f5dc5b54bbc8669c60236c2c, type: 3}
-  pillId: 0
-  pillPartIndex: 1
-  isDestroyed: 0
 --- !u!212 &212193232906813006
 SpriteRenderer:
   m_ObjectHideFlags: 1
@@ -285,7 +253,7 @@ SpriteRenderer:
   m_SortingLayer: 1
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 7964f4be3b81dca408ee0459582872b5, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.5849056, g: 0.19037023, b: 0.19037023, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -330,7 +298,7 @@ SpriteRenderer:
   m_SortingLayer: 1
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: cfc4c932fdc40cf4198c4ec87480536d, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.31132078, g: 0.05139729, b: 0.05139729, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0

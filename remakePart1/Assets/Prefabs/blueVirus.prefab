@@ -21,7 +21,7 @@ GameObject:
   - component: {fileID: 4343300085167708}
   - component: {fileID: 212899033435582750}
   - component: {fileID: 95805006384609310}
-  - component: {fileID: 114327918493102726}
+  - component: {fileID: 114241196800531824}
   m_Layer: 0
   m_Name: blueVirus
   m_TagString: Untagged
@@ -60,7 +60,7 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &114327918493102726
+--- !u!114 &114241196800531824
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -68,10 +68,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 1503214595582680}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 111ae1e0ee9013043a2e10f0df888177, type: 3}
+  m_Script: {fileID: 11500000, guid: 3ed41ad1206616544a35b016ff2c6e14, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  color: {r: 0, g: 0.5686275, b: 0.9843137, a: 1}
 --- !u!212 &212899033435582750
 SpriteRenderer:
   m_ObjectHideFlags: 1

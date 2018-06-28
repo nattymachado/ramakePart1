@@ -20,8 +20,8 @@ GameObject:
   m_Component:
   - component: {fileID: 4232319619394952}
   - component: {fileID: 212808899009465536}
-  - component: {fileID: 114337036951840262}
   - component: {fileID: 95128425866931140}
+  - component: {fileID: 114078839828169086}
   m_Layer: 0
   m_Name: redVirus
   m_TagString: Untagged
@@ -60,7 +60,7 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &114337036951840262
+--- !u!114 &114078839828169086
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -68,10 +68,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 1008377061026240}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 111ae1e0ee9013043a2e10f0df888177, type: 3}
+  m_Script: {fileID: 11500000, guid: 3ed41ad1206616544a35b016ff2c6e14, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  color: {r: 1, g: 0.17254902, b: 0.34901962, a: 1}
 --- !u!212 &212808899009465536
 SpriteRenderer:
   m_ObjectHideFlags: 1
