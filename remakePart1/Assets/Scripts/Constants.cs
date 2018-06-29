@@ -13,4 +13,5 @@ public static class Constants {
     public static float VirusSize = 0.9f;
     public static float InitPositionRows = 3.3f;
     public static float InitPositionColumns = -2.7f;
+    public static float WaitForMoviment = 0.5f;
 }

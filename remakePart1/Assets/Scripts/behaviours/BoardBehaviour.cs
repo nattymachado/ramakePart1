@@ -14,6 +14,7 @@ public class BoardBehaviour : MonoBehaviour
     private int pillCount = 0;
     private Dictionary<string, GameObject> _virusPrefab;
     private GameObject _drMario;
+    private Animator _drMarioAnimator;
 
     public Board board;
 
@@ -23,15 +24,19 @@ public class BoardBehaviour : MonoBehaviour
         _virusPrefab = new Dictionary<string, GameObject> {{ "yellow", yellowVirusPrefab },
             { "red", redVirusPrefab}, { "blue", blueVirusPrefab}};
         _drMario = GameObject.Find("gameMarioThrowingPill");
-        _drMario.GetComponent<SpriteRenderer>().sprite = marioGettingPill;
+        _drMarioAnimator = _drMario.GetComponent<Animator>();
         board = new Board();
         CreateAllVirus();
-        CreateNewPill();
+        StartCoroutine(CreateNewPill());
     }
 
-    private void CreateNewPill()
+    public IEnumerator CreateNewPill()
     {
-
+        
+        _drMarioAnimator.SetInteger("MarioState", 1);
+        yield return new WaitForSeconds(1);
+        _drMarioAnimator.SetInteger("MarioState", 2);
+        yield return new WaitForSeconds(0.5f);
         new Pill(pillCount++, pillPrefab, transform);
     }
 

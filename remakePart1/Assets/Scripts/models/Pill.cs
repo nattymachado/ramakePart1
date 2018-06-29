@@ -14,7 +14,7 @@ public class Pill
         PillParts[0] = new PillPart(id);
         PillParts[1] = new PillPart(id);
 
-        GameObject pill = GameObject.Instantiate(pillPrefab, new Vector3(14f, 20f, 0), Quaternion.Euler(0, 0, 0));
+        GameObject pill = GameObject.Instantiate(pillPrefab, new Vector3(2.5f, 2.2f, 0), Quaternion.Euler(0, 0, 0));
         pill.transform.parent = parent;
         SpriteRenderer[] allChildren = pill.GetComponentsInChildren<SpriteRenderer>();
         List<GameObject> pillParts = new List<GameObject>();
