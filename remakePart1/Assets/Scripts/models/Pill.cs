@@ -7,16 +7,19 @@ public class Pill
     public int Id { get; set; }
     public PillPart[] PillParts { get; set; }
 
-    public Pill(int id, GameObject pillPrefab, Transform parent)
+    public Pill(int id, Transform parent, Transform self)
     {
         Id = id;
         PillParts = new PillPart[2];
         PillParts[0] = new PillPart(id);
+        PillParts[0].PositionColumn = Constants.InitPositionColumnPillPart0;
         PillParts[1] = new PillPart(id);
+        PillParts[1].PositionColumn = Constants.InitPositionColumnPillPart1;
+        PillParts[0].PositionRow = PillParts[1].PositionRow = Constants.Rows - 1;
 
-        GameObject pill = GameObject.Instantiate(pillPrefab, new Vector3(2.5f, 2.2f, 0), Quaternion.Euler(0, 0, 0));
-        pill.transform.parent = parent;
-        SpriteRenderer[] allChildren = pill.GetComponentsInChildren<SpriteRenderer>();
+        self.parent = parent;
+        self.position = new Vector3(Constants.PillInitPositionX, Constants.PillInitPositionY, 0);
+        SpriteRenderer[] allChildren = self.GetComponentsInChildren<SpriteRenderer>();
         List<GameObject> pillParts = new List<GameObject>();
         foreach (SpriteRenderer child in allChildren)
         {

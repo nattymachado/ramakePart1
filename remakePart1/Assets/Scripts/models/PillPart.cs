@@ -5,6 +5,8 @@ using UnityEngine;
 public class PillPart
 {
     public int ParentId { get; set; }
+    public int PositionRow { get; set; }
+    public int PositionColumn { get; set; }
     public bool IsDestroyed { get; set; }
     public bool IsAlone { get; set; }
     public Color PillPartColor { get; set; }

@@ -11,7 +11,13 @@ public static class Constants {
     public static Dictionary<string, Color> ColorsDefinitions = new Dictionary<string, Color> {{ "yellow", yellowColor}, { "red", redColor }, { "blue", blueColor } };
     public static List<string>  ColorDefinitionsKeys = new List<string>(Constants.ColorsDefinitions.Keys);
     public static float VirusSize = 0.9f;
+    public static float PillSize = 0.91f;
     public static float InitPositionRows = 3.3f;
     public static float InitPositionColumns = -2.7f;
-    public static float WaitForMoviment = 0.5f;
+    public static float WaitForMoviment = 0.9f;
+    public static int InitPositionColumnPillPart0 = 3;
+    public static int InitPositionColumnPillPart1 = 4;
+    public static float PillInitPositionX = 2.2f;
+    public static float PillInitPositionY = 2.2f;
+    public static Dictionary<string, int> ColorToInt = new Dictionary<string, int> { { "yellow", 1},{"red", 2}, { "blue", 3 } };
 }

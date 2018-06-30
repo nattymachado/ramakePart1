@@ -5,18 +5,19 @@ using UnityEngine;
 public class BoardBehaviour : MonoBehaviour
 {
 
-    public GameObject pillPrefab;
+    
     public GameObject blueVirusPrefab;
     public GameObject redVirusPrefab;
     public GameObject yellowVirusPrefab;
+    public GameObject pillPrefab;
     public Sprite transparentPill;
     public Sprite marioGettingPill;
-    private int pillCount = 0;
     private Dictionary<string, GameObject> _virusPrefab;
     private GameObject _drMario;
     private Animator _drMarioAnimator;
+    private GameObject _waitingPill;
 
-    public Board board;
+    public Grid BoardGrid { get; set; }
 
     public void Start()
     {
@@ -25,19 +26,22 @@ public class BoardBehaviour : MonoBehaviour
             { "red", redVirusPrefab}, { "blue", blueVirusPrefab}};
         _drMario = GameObject.Find("gameMarioThrowingPill");
         _drMarioAnimator = _drMario.GetComponent<Animator>();
-        board = new Board();
+        BoardGrid = new Grid();
         CreateAllVirus();
-        StartCoroutine(CreateNewPill());
+        CreateNewPill(true);
+        
     }
 
-    public IEnumerator CreateNewPill()
+    public void CreateNewPill(bool isThrowing)
     {
-        
-        _drMarioAnimator.SetInteger("MarioState", 1);
-        yield return new WaitForSeconds(1);
-        _drMarioAnimator.SetInteger("MarioState", 2);
-        yield return new WaitForSeconds(0.5f);
-        new Pill(pillCount++, pillPrefab, transform);
+        _drMarioAnimator.SetInteger("MarioState", 0);
+        _waitingPill = GameObject.Instantiate(pillPrefab, new Vector3(50f, 50f, 0), Quaternion.Euler(0, 0, 0));
+        ThrowPill(isThrowing);
+    }
+
+    public void ThrowPill(bool isThrowing)
+    {
+        _waitingPill.GetComponent<Animator>().SetBool("isThrowing", isThrowing);
     }
 
     public void Update()
@@ -53,34 +57,23 @@ public class BoardBehaviour : MonoBehaviour
 
         for (int i = 0; i < quantityBlueVirus; i++)
         {
-            new Virus(Constants.ColorsDefinitions["blue"], transform, _virusPrefab["blue"], GetEmptyPosition());
+            GameObject virus = GameObject.Instantiate(_virusPrefab["blue"], new Vector3(0,0,0), Quaternion.Euler(0, 0, 0));
+            
         }
         for (int i = 0; i < quantityRedVirus; i++)
         {
-            new Virus(Constants.ColorsDefinitions["red"], transform, _virusPrefab["red"], GetEmptyPosition());
+            GameObject virus = GameObject.Instantiate(_virusPrefab["red"], new Vector3(0, 0, 0), Quaternion.Euler(0, 0, 0));
+            
         }
         for (int i = 0; i < quantityYellowVirus; i++)
         {
-            new Virus(Constants.ColorsDefinitions["yellow"], transform, _virusPrefab["yellow"], GetEmptyPosition());
+            GameObject virus = GameObject.Instantiate(_virusPrefab["yellow"], new Vector3(0, 0, 0), Quaternion.Euler(0, 0, 0));
+            
         }
     }
 
-    private Dictionary<string, int> GetPosition()
-    {
-        Dictionary<string, int> position = new Dictionary<string, int> { { "row", 0 }, { "column", 0 } };
-        position["row"] = (Random.Range(0, (Constants.Rows - 5)));
-        position["column"] = (Random.Range(0, (Constants.Columns - 1)));
-        return position;
-    }
+    
 
-    private Dictionary<string, int> GetEmptyPosition()
-    {
-        Dictionary<string, int> position = GetPosition();
-        while (board.mainBoard[position["row"], position["column"]] != 0)
-        {
-            position = GetPosition();
-        }
-        return position;
-    }
+    
 
 }

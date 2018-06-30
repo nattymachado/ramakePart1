@@ -23,7 +23,6 @@ public class PillPartBehaviour : MonoBehaviour
     {
         SpriteRenderer pillPartSpriteRender = GetComponent<SpriteRenderer>();
         pillPartSpriteRender.color = this._pillPartObj.PillPartColor;
-        Debug.Log(pillPartSpriteRender.color);
     }
 
     public void Start()
