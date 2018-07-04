@@ -19,6 +19,7 @@ public class VirusBehaviour : MonoBehaviour
         _boardBehaviour = _board.GetComponent<BoardBehaviour>();
         _grid = _boardBehaviour.BoardGrid;
         VirusObject = new Virus(Constants.ColorsDefinitions[keyColor], _board.transform, _grid.GetEmptyPosition(), transform);
+        _grid.IncludePositionsOnBoard(VirusObject);
     }
 
 }

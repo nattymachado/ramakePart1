@@ -35,13 +35,16 @@ public class BoardBehaviour : MonoBehaviour
     public void CreateNewPill(bool isThrowing)
     {
         _drMarioAnimator.SetInteger("MarioState", 0);
-        _waitingPill = GameObject.Instantiate(pillPrefab, new Vector3(50f, 50f, 0), Quaternion.Euler(0, 0, 0));
+        _waitingPill = Instantiate(pillPrefab, new Vector3(0, 0, 0), Quaternion.identity);
+        _waitingPill.transform.parent = transform;
+        _waitingPill.GetComponent<Animator>().enabled = true;
         ThrowPill(isThrowing);
     }
 
     public void ThrowPill(bool isThrowing)
     {
         _waitingPill.GetComponent<Animator>().SetBool("isThrowing", isThrowing);
+        
     }
 
     public void Update()
