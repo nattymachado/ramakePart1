@@ -6,8 +6,12 @@ using UnityEngine;
 
 public class player_selector : MonoBehaviour {
 
-	// Use this for initialization
-	void Start () {
+    private AudioSource _hearth_sound = null;
+
+    // Use this for initialization
+    void Start () {
+
+        _hearth_sound = GetComponent<AudioSource>();
 		
 	}
 	
@@ -17,9 +21,11 @@ public class player_selector : MonoBehaviour {
         if (Input.GetKeyDown(KeyCode.DownArrow))
         {
             transform.position = new Vector3(transform.position.x, -2.65f, transform.position.z);
+            _hearth_sound.Play();
         } else if (Input.GetKeyDown(KeyCode.UpArrow))
         {
             transform.position = new Vector3(transform.position.x, -1.975f, transform.position.z);
+            _hearth_sound.Play();
         }
 
         if (Input.GetKeyDown(KeyCode.Return))
