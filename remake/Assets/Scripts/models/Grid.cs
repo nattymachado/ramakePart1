@@ -71,9 +71,25 @@ public class Grid
     public Dictionary<string, int> GetEmptyPosition()
     {
         Dictionary<string, int> position = GetPosition();
-        while (_data[position["row"], position["column"]] != null)
+        int loopCounter = 0;
+        while (_data[position["row"], position["column"]] != null && loopCounter < 3)
         {
             position = GetPosition();
+            loopCounter += 1;
+        }
+        if (_data[position["row"], position["column"]] != null)
+        {
+            for (int row = 0; row < Constants.Rows-3; row++)
+            {
+                for (int column = 0; column < Constants.Columns; column++)
+                {
+                    if (_data[row, column] == null)
+                    {
+                        position["row"] = row;
+                        position["column"] = column;
+                    }
+                }
+            }
         }
         return position;
     }
@@ -81,7 +97,7 @@ public class Grid
     private Dictionary<string, int> GetPosition()
     {
         Dictionary<string, int> position = new Dictionary<string, int> { { "row", 0 }, { "column", 0 } };
-        position["row"] = (Random.Range(0, (Constants.Rows - 5)));
+        position["row"] = (Random.Range(0, (Constants.Rows - 4)));
         position["column"] = (Random.Range(0, (Constants.Columns - 1)));
         return position;
     }

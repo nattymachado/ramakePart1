@@ -5,23 +5,40 @@ using UnityEngine;
 sealed class Configuration
 {
     private static readonly Configuration instance = new Configuration();
-    public int Level { get; set; }
     private int _speed;
+    private float _speedPills;
     private string _speedName;
+    public int Level { get; set; }
+    public float SpeedPills
+    {
+        get
+        {
+            return _speedPills;
+        }
+    }
+    
     public int Speed {
         get
         {
             return _speed;
         }
-        set {
+        set
+        {
             _speed = value;
             if (_speed == 0)
             {
                 _speedName = "LOW";
-            } else if (_speed == 1) {
+                _speedPills = 0.9f;
+            }
+            else if (_speed == 1)
+            {
                 _speedName = "MED";
-            } else {
+                _speedPills = 0.4f;
+            }
+            else
+            {
                 _speedName = "HI";
+                _speedPills = 0.2f;
             }
         }
     }

@@ -43,9 +43,27 @@ public class BoardBehaviour : MonoBehaviour
         _configuration = Configuration.Instance;
         levelValue.text = _configuration.Level.ToString().PadLeft(2, '0');
         speedValue.text = _configuration.SpeedName;
-        _quantityBlueVirus = Random.Range(2, 3);
-        _quantityRedVirus = Random.Range(1, 3);
-        _quantityYellowVirus = Random.Range(1, 1);
+        int totalVirus = _configuration.Level * 4;
+        totalVirus += 4;
+        int totalColors = totalVirus / 3;
+        int virusWithMore = Random.Range(0, 2);
+        _quantityBlueVirus = totalColors;
+        _quantityRedVirus = totalColors;
+        _quantityYellowVirus = totalColors;
+        switch (virusWithMore)
+        {
+            case 0:
+                _quantityBlueVirus += totalVirus % 3;
+                break;
+            case 1:
+                _quantityRedVirus += totalVirus % 3;
+                break;
+            case 2:
+                _quantityYellowVirus += totalVirus % 3;
+                break;
+            default:
+                break;
+        }
         virusValue.text = (_quantityBlueVirus + _quantityRedVirus + _quantityYellowVirus).ToString().PadLeft(2, '0');
         _virusPrefab = new Dictionary<string, GameObject> {{ "yellow", yellowVirusPrefab },
             { "red", redVirusPrefab}, { "blue", blueVirusPrefab}};
@@ -56,7 +74,7 @@ public class BoardBehaviour : MonoBehaviour
         BoardGrid = new Grid();
         CreateAllVirus();
         CreateNewPill(true);
-        
+
 
     }
 

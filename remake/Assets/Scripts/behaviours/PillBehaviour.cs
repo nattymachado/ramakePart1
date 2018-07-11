@@ -24,7 +24,8 @@ public class PillBehaviour : MonoBehaviour {
             _grid = _boardBehaviour.BoardGrid;
         }
     }
-    
+    private Configuration _configuration;
+
     public Constants.UpdatePointsDelegate UpdatePoints;
 
 
@@ -43,8 +44,10 @@ public class PillBehaviour : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
+        _configuration = Configuration.Instance;
         _pill = new Pill(Time.frameCount, _board.transform, transform, _grid);
         UpdatePoints = UpdatePointsOnBoard;
+
     }
 	
 	// Update is called once per frame
@@ -53,14 +56,13 @@ public class PillBehaviour : MonoBehaviour {
         _totalTime += Time.deltaTime;
         if (_finishedAnimation == true && !finishedMoviment)
         {
-            MovimentDownAutomatic();
             if (!onlyDownMoviment)
             {
                 MovimentDownWithKey();
                 MovimentRotate();
                 MovimentLeftOrRight();
             }
-            
+            MovimentDownAutomatic();
         }
     }
 
@@ -264,7 +266,7 @@ public class PillBehaviour : MonoBehaviour {
         bool isPositionEmpty = CheckNewPositionDown();
         if (isPositionEmpty)
         {
-            if (_period > Constants.WaitForMoviment)
+            if (_period > _configuration.SpeedPills)
             {
                 MovimentDown();
                 _period = 0;
@@ -316,7 +318,7 @@ public class PillBehaviour : MonoBehaviour {
             }
             if (_nextItem1 == null && _nextItem2 == null)
             {
-                _period = Constants.WaitForMoviment;
+                _period = _configuration.SpeedPills;
             } 
             
         }
@@ -329,7 +331,7 @@ public class PillBehaviour : MonoBehaviour {
             MovimentDownAutomatic();
             finishedMoviment = false;
             onlyDownMoviment = true;
-            _period = Constants.WaitForMoviment;
+            _period = _configuration.SpeedPills;
         }
     }
 

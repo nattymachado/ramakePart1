@@ -14,7 +14,6 @@ public static class Constants {
     public static float PillSize = 0.91f;
     public static float InitPositionRows = 1.5f;
     public static float InitPositionColumns = -3.7f;
-    public static float WaitForMoviment = 0.9f;
     public static float VirusWaitToUp = 2f;
     public static int InitPositionColumnPillPart0 = 3;
     public static int InitPositionColumnPillPart1 = 4;
