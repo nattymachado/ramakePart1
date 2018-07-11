@@ -78,33 +78,10 @@ public class PillPartBehaviour : MonoBehaviour
                 pillBehaviour.ClearSecondPillPart();
 
             }
-            if (transform.GetComponentInParent<PillBehaviour>().finishedMoviment)
-            {
-                transform.GetComponentInParent<PillBehaviour>().stopTemporaryMoviment = false;
-                StartCoroutine(pillBehaviour.MovimentAfterStop());
-            }
+            pillBehaviour.MovimentAfterStop();
             
         }
         
     }
-
-    /*public void OnCollisionEnter2D(Collision2D other)
-    {
-        PillBehaviour pillBehaviour = transform.parent.GetComponent<PillBehaviour>();
-        PillPartBehaviour otherPill = other.collider.GetComponent<PillPartBehaviour>();
-        if (_pillPartObj.IsDestroyed != true)
-        {
-            if (otherPill._pillPartObj.ParentId != _pillPartObj.ParentId && !otherPill.GetComponentInParent<PillBehaviour>().finishedMoviment &&
-                !transform.GetComponentInParent<PillBehaviour>().finishedMoviment)
-            {
-                PillBehaviour pillBh = transform.GetComponentInParent<PillBehaviour>();
-                if (!pillBh.onlyDownMoviment)
-                {
-                    pillBh.stopTemporaryMoviment = true;
-                }
-                
-            }
-        }
-    }*/
 
 }

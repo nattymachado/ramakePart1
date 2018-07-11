@@ -26,20 +26,32 @@ public class Grid
     public void IncludePositionsOnBoard(GridItem item)
     {
         _data[item.GetPositionRow(), item.GetPositionColumn()] = item;
-        CheckGameOver();
+        //CheckGameOver();
     }
 
-    public void CheckGameOver()
+    public GridItem GetItem(int row, int column)
+    {
+        if (row >= 0)
+        {
+            return _data[row, column];
+        } else
+        {
+            return null;
+        }
+        
+    }
+
+    /*public void CheckGameOver()
     {
         if (_data[Constants.Rows - 1, Constants.Columns / 2] != null)
         {
             IsGameOver = true;
         } 
-    }
+    }*/
 
     public void CleanPositionsOnBoard(GridItem item)
     {
-        _data[item.GetPositionRow(), item.GetPositionColumn()] = null;
+       _data[item.GetPositionRow(), item.GetPositionColumn()] = null;
     }
 
     public bool IsPositionEmpty(int horizontal, int vertical)

@@ -34,9 +34,10 @@ public class PillBehaviour : MonoBehaviour {
     private float _period = 0;
     private bool _finishedAnimation = false;
     public bool finishedMoviment = false;
-    public bool stopTemporaryMoviment = false;
     public bool onlyDownMoviment = false;
     private Pill _pill;
+    private GridItem _nextItem1, _nextItem2 = null;
+    //private int positionsDown = 0;
 
     
 
@@ -66,12 +67,15 @@ public class PillBehaviour : MonoBehaviour {
     public void UpdatePositionsPill(int newRow0, int newColumn0, int newRow1, int newColumn1)
     {
         _grid.CleanPositionsOnBoard(_pill.PillParts["first"]);
+        if (_pill.PillParts["second"] != null)
+        {
+            _grid.CleanPositionsOnBoard(_pill.PillParts["second"]);
+        } 
         _pill.PillParts["first"].PositionRow += newRow0;
         _pill.PillParts["first"].PositionColumn += newColumn0;
         _grid.IncludePositionsOnBoard(_pill.PillParts["first"]);
         if (_pill.PillParts["second"]  != null)
         {
-            _grid.CleanPositionsOnBoard(_pill.PillParts["second"]);
             _pill.PillParts["second"].PositionRow += newRow1;
             _pill.PillParts["second"].PositionColumn += newColumn1;
             _grid.IncludePositionsOnBoard(_pill.PillParts["second"]);
@@ -98,10 +102,69 @@ public class PillBehaviour : MonoBehaviour {
         }
     }
 
+    private bool CheckNewPositionLeft()
+    {
+        bool isPositionEmpty = false;
+        _nextItem1 = null;
+        _nextItem2 = null;
+
+        Dictionary<string, object> nextPositionResults = new Dictionary<string, object>();
+        if (_pill.State == PillState.VERTICAL)
+        {
+            if (_pill.PillParts["second"] != null)
+            {
+                isPositionEmpty = (_grid.IsPositionEmpty(_pill.PillParts["second"].PositionRow, _pill.PillParts["second"].PositionColumn - 1) &&
+                    _grid.IsPositionEmpty(_pill.PillParts["first"].PositionRow, _pill.PillParts["first"].PositionColumn - 1));
+            }
+            else
+            {
+                isPositionEmpty = (_grid.IsPositionEmpty(_pill.PillParts["first"].PositionRow, _pill.PillParts["first"].PositionColumn - 1));
+            }
+        }
+        else
+        {
+            isPositionEmpty = (_grid.IsPositionEmpty(_pill.PillParts["first"].PositionRow, _pill.PillParts["first"].PositionColumn - 1));
+        }
+        return isPositionEmpty;
+    }
+
+    private bool CheckNewPositionRight()
+    {
+        bool isPositionEmpty = false;
+        _nextItem1 = null;
+        _nextItem2 = null;
+
+        Dictionary<string, object> nextPositionResults = new Dictionary<string, object>();
+        if (_pill.State == PillState.VERTICAL)
+        {
+            if (_pill.PillParts["second"] != null)
+            {
+                isPositionEmpty = (_grid.IsPositionEmpty(_pill.PillParts["second"].PositionRow, _pill.PillParts["second"].PositionColumn + 1) &&
+                    _grid.IsPositionEmpty(_pill.PillParts["first"].PositionRow, _pill.PillParts["first"].PositionColumn + 1));
+            }
+            else
+            {
+                isPositionEmpty = (_grid.IsPositionEmpty(_pill.PillParts["first"].PositionRow, _pill.PillParts["first"].PositionColumn + 1));
+            }
+        }
+        else
+        {
+            if (_pill.PillParts["second"] != null)
+            {
+                isPositionEmpty = (_grid.IsPositionEmpty(_pill.PillParts["second"].PositionRow, _pill.PillParts["second"].PositionColumn + 1));
+            }
+            else
+            {
+                isPositionEmpty = (_grid.IsPositionEmpty(_pill.PillParts["first"].PositionRow, _pill.PillParts["first"].PositionColumn + 1));
+            }
+            
+        }
+        return isPositionEmpty;
+    }
+
     public void MovimentLeft()
     {
-        if (_grid.IsPositionEmpty(_pill.PillParts["first"].PositionRow, _pill.PillParts["first"].PositionColumn - 1) ||
-            _grid.IsPositionEmpty(_pill.PillParts["second"].PositionRow, _pill.PillParts["second"].PositionColumn - 1))
+        if (CheckNewPositionLeft())
         {
             transform.position = new Vector3(transform.position.x - Constants.PillSize, transform.position.y, 0f);
             UpdatePositionsPill(0, -1, 0, -1);
@@ -110,8 +173,7 @@ public class PillBehaviour : MonoBehaviour {
 
     public void MovimentRight()
     {
-        if (_grid.IsPositionEmpty(_pill.PillParts["first"].PositionRow, _pill.PillParts["first"].PositionColumn + 1) ||
-            _grid.IsPositionEmpty(_pill.PillParts["second"].PositionRow, _pill.PillParts["second"].PositionColumn + 1))
+        if (CheckNewPositionRight())
         {
             transform.position = new Vector3(transform.position.x + Constants.PillSize, transform.position.y, 0f);
             UpdatePositionsPill(0, 1, 0, 1);
@@ -121,18 +183,85 @@ public class PillBehaviour : MonoBehaviour {
 
     private void MovimentDown()
     {
-        if (!stopTemporaryMoviment)
-        {
-            transform.position = new Vector3(transform.position.x, transform.position.y - Constants.PillSize, 0f);
-            UpdatePositionsPill(-1, 0, -1, 0);
-        }
+        UpdatePositionsPill(-1, 0, -1, 0);
+        transform.position = new Vector3(transform.position.x, transform.position.y - Constants.PillSize, 0f);
         
+        
+    }
+
+    private Dictionary<string, object> GetNextItemDown(PillPart currentItem, bool bypassFinalizeMoviment)
+    {
+        int positionsDown = 1;
+        GridItem nextItem = null;
+        if (!bypassFinalizeMoviment)
+        {
+            while ((currentItem.PositionRow - positionsDown >= 0) && (_grid.GetItem(currentItem.PositionRow - positionsDown, currentItem.PositionColumn) != null)
+            && (!_grid.GetItem(currentItem.PositionRow - positionsDown, currentItem.PositionColumn).FinalizedMoviment()))
+            {
+                positionsDown += 1;
+            }
+        }        
+
+        if (currentItem.PositionRow - positionsDown >= 0)
+        {
+            nextItem = _grid.GetItem(currentItem.PositionRow - positionsDown, currentItem.PositionColumn);
+        }
+        Dictionary<string, object> results = new Dictionary<string, object>();
+        results.Add("nextItem", nextItem);
+        results.Add("positionsDown", positionsDown);
+        return results;
+    }
+
+    private bool IsValidPosition(int positionsDown, PillPart current)
+    {
+        if (current.GetPositionRow() - positionsDown >= 0)
+            return true;
+        else
+            return false;
+    }
+
+    private bool CheckNewPositionDown()
+    {
+        bool isPositionEmpty = false;
+        _nextItem1 = null;
+        _nextItem2 = null;
+
+        Dictionary<string, object> nextPositionResults = new Dictionary<string, object>();
+        if (_pill.State == PillState.VERTICAL)
+        {
+            if (_pill.PillParts["second"] != null)
+            {
+                nextPositionResults = GetNextItemDown(_pill.PillParts["second"], false);
+                _nextItem2 = (GridItem) nextPositionResults["nextItem"];
+                isPositionEmpty = _nextItem2 == null && IsValidPosition((int)nextPositionResults["positionsDown"], _pill.PillParts["second"]);
+            }
+            else
+            {
+                nextPositionResults = GetNextItemDown(_pill.PillParts["first"], false);
+                _nextItem1 = (GridItem)nextPositionResults["nextItem"];
+                isPositionEmpty = _nextItem1 == null && IsValidPosition((int)nextPositionResults["positionsDown"], _pill.PillParts["first"]);
+            }
+        }
+        else
+        {
+            if (_pill.PillParts["second"] != null)
+            {
+                nextPositionResults = GetNextItemDown(_pill.PillParts["second"], false);
+                _nextItem2 = (GridItem)nextPositionResults["nextItem"];
+
+            }
+            nextPositionResults = GetNextItemDown(_pill.PillParts["first"], false);
+            _nextItem1 = (GridItem)nextPositionResults["nextItem"];
+            isPositionEmpty = _nextItem2 == null && _nextItem1 == null && IsValidPosition((int)nextPositionResults["positionsDown"], _pill.PillParts["first"]);
+        }
+        return isPositionEmpty;
     }
 
     public void MovimentDownAutomatic()
     {
-        if ((_pill.PillParts["first"] == null || _grid.IsPositionEmpty(_pill.PillParts["first"].PositionRow - 1, _pill.PillParts["first"].PositionColumn)) ||
-              (_pill.PillParts["second"] == null ||_grid.IsPositionEmpty(_pill.PillParts["second"].PositionRow - 1, _pill.PillParts["second"].PositionColumn)))
+        
+        bool isPositionEmpty = CheckNewPositionDown();
+        if (isPositionEmpty)
         {
             if (_period > Constants.WaitForMoviment)
             {
@@ -145,35 +274,57 @@ public class PillBehaviour : MonoBehaviour {
             }
         } else if (!finishedMoviment)
         {
-            FinalizeMoviment();
+            if ((_nextItem1 == null || _nextItem1.FinalizedMoviment()) && (_nextItem2 == null || _nextItem2.FinalizedMoviment()))
+            {
+                FinalizeMoviment();
+            }
+            
         }
     }
 
     public void MovimentDownWithKey()
     {
+        _nextItem1 = null;
+        _nextItem2 = null;
         if (Input.GetKeyDown(KeyCode.DownArrow))
         {
-            if (_grid.IsPositionEmpty(_pill.PillParts["first"].PositionRow - 1, _pill.PillParts["first"].PositionColumn) &&
-              _grid.IsPositionEmpty(_pill.PillParts["second"].PositionRow - 1, _pill.PillParts["second"].PositionColumn))
+            Dictionary<string, object> nextPositionResults = new Dictionary<string, object>();
+            if (_pill.State == PillState.VERTICAL)
             {
-                MovimentDown();
+                if (_pill.PillParts["second"] != null)
+                {
+                    nextPositionResults = GetNextItemDown(_pill.PillParts["second"], true);
+                    _nextItem2 = (GridItem)nextPositionResults["nextItem"];
+                }
+                else
+                {
+                    nextPositionResults = GetNextItemDown(_pill.PillParts["first"], true);
+                    _nextItem1 = (GridItem)nextPositionResults["nextItem"];
+                }
             }
+            else
+            {
+                if (_pill.PillParts["second"] != null)
+                {
+                    nextPositionResults = GetNextItemDown(_pill.PillParts["second"], true);
+                    _nextItem2 = (GridItem)nextPositionResults["nextItem"];
+
+                }
+                nextPositionResults = GetNextItemDown(_pill.PillParts["first"], true);
+                _nextItem1 = (GridItem)nextPositionResults["nextItem"];
+            }
+            if (_nextItem1 == null && _nextItem2 == null)
+            {
+                _period = Constants.WaitForMoviment;
+            } 
+            
         }
     }
 
-    public IEnumerator MovimentAfterStop()
+    public void MovimentAfterStop()
     {
-        yield return new WaitForSeconds(0.1f);
         if ((_pill.PillParts["first"] != null || _pill.PillParts["second"] != null) && (finishedMoviment == true))
         {
-            if (_pill.PillParts["first"] != null)
-            {
-                _grid.CleanPositionsOnBoard(_pill.PillParts["first"]);
-            }
-            if (_pill.PillParts["second"] != null)
-            {
-                _grid.CleanPositionsOnBoard(_pill.PillParts["second"]);
-            }
             MovimentDownAutomatic();
             finishedMoviment = false;
             onlyDownMoviment = true;
@@ -260,10 +411,6 @@ public class PillBehaviour : MonoBehaviour {
             _board.GetComponent<BoardBehaviour>().ThrowPill(true);
         }
         finishedMoviment = true;
-        /*if (_pill.PillParts["first"] != null)
-            _grid.IncludePositionsOnBoard(_pill.PillParts["first"]);
-        if (_pill.PillParts["second"] != null)
-            _grid.IncludePositionsOnBoard(_pill.PillParts["second"]);*/
         Dictionary<string, int> firstPosition = new Dictionary<string, int> { { "row", _pill.PillParts["first"].PositionRow }, { "column", _pill.PillParts["first"].PositionColumn } };
         Dictionary<string, int> secondPosition = null;
         if (_pill.PillParts["second"] != null)

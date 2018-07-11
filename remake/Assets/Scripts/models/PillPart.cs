@@ -64,9 +64,14 @@ public class PillPart : GridItem
         PillPartColor = Constants.ColorsDefinitions[colorKey];
     }
 
-    
+    public bool FinalizedMoviment()
+    {
+        return Behaviour.GetComponentInParent<PillBehaviour>().finishedMoviment;
+    }
 
-    
-        
+
+
+
+
 
 }

@@ -10,6 +10,10 @@ public class Virus : GridItem
     public VirusBehaviour Behaviour { get; set; }
     public bool IsDestroyed { get; set; }
 
+    public bool FinalizedMoviment() {
+            return true;
+    }
+
     public Virus(Color virusColor, Transform parent, Dictionary<string, int> position, Transform self, VirusBehaviour behaviuor) {
 
         VirusColor = virusColor;

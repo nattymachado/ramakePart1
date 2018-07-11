@@ -11,5 +11,6 @@ public interface GridItem
     int GetPositionRow();
     int GetPositionColumn();
     string GetGridItemType();
+    bool FinalizedMoviment();
 
 }
