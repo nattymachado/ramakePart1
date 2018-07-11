@@ -23,6 +23,11 @@ public class PillPart : GridItem
        
     }
 
+    public bool OnlyDownMoviment()
+    {
+        return Behaviour.GetComponentInParent<PillBehaviour>().onlyDownMoviment;
+    }
+
     public int GetPositionRow()
     {
         return PositionRow;

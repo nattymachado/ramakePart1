@@ -14,6 +14,11 @@ public class Virus : GridItem
             return true;
     }
 
+    public bool OnlyDownMoviment()
+    {
+        return false;
+    }
+
     public Virus(Color virusColor, Transform parent, Dictionary<string, int> position, Transform self, VirusBehaviour behaviuor) {
 
         VirusColor = virusColor;

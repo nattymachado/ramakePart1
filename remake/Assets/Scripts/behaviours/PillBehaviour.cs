@@ -196,7 +196,8 @@ public class PillBehaviour : MonoBehaviour {
         if (!bypassFinalizeMoviment)
         {
             while ((currentItem.PositionRow - positionsDown >= 0) && (_grid.GetItem(currentItem.PositionRow - positionsDown, currentItem.PositionColumn) != null)
-            && (!_grid.GetItem(currentItem.PositionRow - positionsDown, currentItem.PositionColumn).FinalizedMoviment()))
+            && (!_grid.GetItem(currentItem.PositionRow - positionsDown, currentItem.PositionColumn).FinalizedMoviment() &&
+            _grid.GetItem(currentItem.PositionRow - positionsDown, currentItem.PositionColumn).OnlyDownMoviment()))
             {
                 positionsDown += 1;
             }

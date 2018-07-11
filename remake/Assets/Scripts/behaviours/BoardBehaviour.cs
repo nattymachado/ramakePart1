@@ -41,11 +41,12 @@ public class BoardBehaviour : MonoBehaviour
     public void Start()
     {
         _configuration = Configuration.Instance;
-        levelValue.text = _configuration.Level.ToString();
-        speedValue.text = _configuration.Speed.ToString();
+        levelValue.text = _configuration.Level.ToString().PadLeft(2, '0');
+        speedValue.text = _configuration.SpeedName;
         _quantityBlueVirus = Random.Range(2, 3);
         _quantityRedVirus = Random.Range(1, 3);
         _quantityYellowVirus = Random.Range(1, 1);
+        virusValue.text = (_quantityBlueVirus + _quantityRedVirus + _quantityYellowVirus).ToString().PadLeft(2, '0');
         _virusPrefab = new Dictionary<string, GameObject> {{ "yellow", yellowVirusPrefab },
             { "red", redVirusPrefab}, { "blue", blueVirusPrefab}};
         _gameBanner = GameObject.Find("gameBanner");

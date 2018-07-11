@@ -1,5 +1,6 @@
 ﻿using UnityEngine.SceneManagement;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class MenuConfigurations : MonoBehaviour
 {
@@ -11,6 +12,7 @@ public class MenuConfigurations : MonoBehaviour
     private string _option_music_name;
     private int _option_speed;
     private int _option_level;
+
     
     public Sprite virus_level_highlight;
     public Sprite virus_level_no_highlight;
@@ -26,6 +28,7 @@ public class MenuConfigurations : MonoBehaviour
     public Sprite menu_off;
     public Sprite menu_arrow_down;
     public Sprite menu_arrow_down_large;
+    public Text levelValue;
 
     private void Start()
     {
@@ -51,11 +54,14 @@ public class MenuConfigurations : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.RightArrow) && _option == 0 && _option_level < 20)
         {
             _option_level += 1;
+
+            levelValue.text = _option_level.ToString().PadLeft(2, '0');
             _beep_horizontal.Play();
         }
         else if (Input.GetKeyDown(KeyCode.LeftArrow) && _option == 0 && _option_level > 0)
         {
             _option_level -= 1;
+            levelValue.text = _option_level.ToString().PadLeft(2, '0');
             _beep_horizontal.Play();
         }
 
