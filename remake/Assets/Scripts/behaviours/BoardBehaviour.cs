@@ -20,8 +20,11 @@ public class BoardBehaviour : MonoBehaviour
     
     private GameObject _gameBanner;
     private Animator _drMarioAnimator;
-    private Text _topValue;
-    private Text _scoreValue;
+    public Text topValue;
+    public Text scoreValue;
+    public Text levelValue;
+    public Text speedValue;
+    public Text virusValue;
     private GameObject _waitingPill;
     private bool _isGameOver = false;
     private bool _isGameEnded = false;
@@ -29,12 +32,17 @@ public class BoardBehaviour : MonoBehaviour
     private int _quantityRedVirus;
     private int _quantityYellowVirus;
     private int _points;
+    private Configuration _configuration;
+
 
 
     public Grid BoardGrid { get; set; }
 
     public void Start()
     {
+        _configuration = Configuration.Instance;
+        levelValue.text = _configuration.Level.ToString();
+        speedValue.text = _configuration.Speed.ToString();
         _quantityBlueVirus = Random.Range(2, 3);
         _quantityRedVirus = Random.Range(1, 3);
         _quantityYellowVirus = Random.Range(1, 1);
@@ -43,13 +51,12 @@ public class BoardBehaviour : MonoBehaviour
         _gameBanner = GameObject.Find("gameBanner");
         _gameBanner.GetComponent<SpriteRenderer>().enabled = false;
         _drMarioAnimator = drMario.GetComponent<Animator>();
-        _topValue = GameObject.Find("TopValueText").GetComponent<Text>();
-        _topValue.text = "0010000";
-        _scoreValue = GameObject.Find("ScoreValueText").GetComponent<Text>();
+        topValue.text = "0010000";
         BoardGrid = new Grid();
         CreateAllVirus();
         CreateNewPill(true);
         
+
     }
 
     public void CreateNewPill(bool isThrowing)
@@ -80,7 +87,7 @@ public class BoardBehaviour : MonoBehaviour
     {
         _points += (virusQuantity * 100);
         string points = _points.ToString();
-        _scoreValue.text = points.PadLeft(7, '0');
+        scoreValue.text = points.PadLeft(7, '0');
     }
 
     public void OverGame()
