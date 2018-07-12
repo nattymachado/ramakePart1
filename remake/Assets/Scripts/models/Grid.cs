@@ -26,7 +26,7 @@ public class Grid
     public void IncludePositionsOnBoard(GridItem item)
     {
         _data[item.GetPositionRow(), item.GetPositionColumn()] = item;
-        //CheckGameOver();
+        CheckGameOver();
     }
 
     public GridItem GetItem(int row, int column)
@@ -41,13 +41,13 @@ public class Grid
         
     }
 
-    /*public void CheckGameOver()
+    public void CheckGameOver()
     {
-        if (_data[Constants.Rows - 1, Constants.Columns / 2] != null)
+        if (_data[Constants.Rows - 1, Constants.Columns / 2] != null && _data[Constants.Rows - 1, Constants.Columns / 2].FinalizedMoviment())
         {
             IsGameOver = true;
         } 
-    }*/
+    }
 
     public void CleanPositionsOnBoard(GridItem item)
     {

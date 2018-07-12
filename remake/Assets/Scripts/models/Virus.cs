@@ -25,7 +25,7 @@ public class Virus : GridItem
         PositionRow = position["row"];
         PositionColumn = position["column"];
         Behaviour = behaviuor;
-        Vector3 pos = new Vector3(Constants.VirusSize * (position["column"]+1) + Constants.InitPositionColumns,
+        Vector3 pos = new Vector3(Constants.VirusSizeColumn * (position["column"]+1) + Constants.InitPositionColumns,
             Constants.VirusSize * (position["row"] +1) + Constants.InitPositionRows, 0);
         self.position = pos;
         self.parent = parent;

@@ -9,7 +9,6 @@ public class MenuConfigurations : MonoBehaviour
 
     private int _option;
     private int _option_music;
-    private string _option_music_name;
     private int _option_speed;
     private int _option_level;
 
@@ -120,7 +119,6 @@ public class MenuConfigurations : MonoBehaviour
 
         if (_option_music == 0)
         {
-            _option_music_name = "menu_fever";
             GameObject.Find("menu_fever").GetComponent<SpriteRenderer>().sprite = menu_fever_outlined;
         }
         else
@@ -130,18 +128,15 @@ public class MenuConfigurations : MonoBehaviour
 
         if (_option_music == 1)
         {
-            _option_music_name = "menu_chill";
             GameObject.Find("menu_chill").GetComponent<SpriteRenderer>().sprite = menu_chill_outlined;
         }
         else
         {
-            _option_music_name = "menu_chill";
             GameObject.Find("menu_chill").GetComponent<SpriteRenderer>().sprite = menu_chill;
         }
 
         if (_option_music == 2)
         {
-            _option_music_name = "menu_off";
             GameObject.Find("menu_off").GetComponent<SpriteRenderer>().sprite = menu_off_outlined;
         }
         else
@@ -154,7 +149,7 @@ public class MenuConfigurations : MonoBehaviour
             Configuration configuration = Configuration.Instance;
             configuration.Level = _option_level;
             configuration.Speed = _option_speed;
-            configuration.Music = _option_music_name;
+            configuration.Music = _option_music;
             SceneManager.LoadScene("BoardGame");
             
         }

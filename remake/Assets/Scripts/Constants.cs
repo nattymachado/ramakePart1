@@ -10,7 +10,8 @@ public static class Constants {
     private static Color redColor = new Color(1, 0.172549f, 0.3490196f); 
     public static Dictionary<string, Color> ColorsDefinitions = new Dictionary<string, Color> {{ "yellow", yellowColor}, { "red", redColor }, { "blue", blueColor } };
     public static List<string>  ColorDefinitionsKeys = new List<string>(Constants.ColorsDefinitions.Keys);
-    public static float VirusSize = 0.9f;
+    public static float VirusSize = 0.93f;
+    public static float VirusSizeColumn = 0.9f;
     public static float PillSize = 0.91f;
     public static float InitPositionRows = 1.5f;
     public static float InitPositionColumns = -3.7f;

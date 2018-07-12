@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
+
+
 public class BoardBehaviour : MonoBehaviour
 {
 
@@ -13,12 +16,15 @@ public class BoardBehaviour : MonoBehaviour
     public GameObject redVirusPrefab;
     public GameObject yellowVirusPrefab;
     public GameObject pillPrefab;
+    public Image background;
     public Sprite transparentPill;
     public Sprite marioGettingPill;
-    public Sprite endGameBanner;
+    public AudioSource audioSource;
+    public AudioClip music1, music2;
     private Dictionary<string, GameObject> _virusPrefab;
     
-    private GameObject _gameBanner;
+    public GameObject gameBannerGameOver;
+    public GameObject gameBannerGameClear;
     private Animator _drMarioAnimator;
     public Text topValue;
     public Text scoreValue;
@@ -41,6 +47,30 @@ public class BoardBehaviour : MonoBehaviour
     public void Start()
     {
         _configuration = Configuration.Instance;
+        background.color = _configuration.LevelColor[_configuration.Level];
+
+
+        switch (_configuration.Music)
+        {
+            case 0:
+                audioSource.clip = music1;
+                break;
+            case 1:
+                audioSource.clip = music2;
+                break;
+            default:
+                break;
+        }
+
+        if (_configuration.Music < 2)
+        {
+            audioSource.enabled = true;
+            audioSource.Play();
+        } else
+        {
+            audioSource.enabled = false;
+        }
+
         levelValue.text = _configuration.Level.ToString().PadLeft(2, '0');
         speedValue.text = _configuration.SpeedName;
         int totalVirus = _configuration.Level * 4;
@@ -67,13 +97,14 @@ public class BoardBehaviour : MonoBehaviour
         virusValue.text = (_quantityBlueVirus + _quantityRedVirus + _quantityYellowVirus).ToString().PadLeft(2, '0');
         _virusPrefab = new Dictionary<string, GameObject> {{ "yellow", yellowVirusPrefab },
             { "red", redVirusPrefab}, { "blue", blueVirusPrefab}};
-        _gameBanner = GameObject.Find("gameBanner");
-        _gameBanner.GetComponent<SpriteRenderer>().enabled = false;
+        gameBannerGameOver.GetComponent<SpriteRenderer>().enabled = false;
+        gameBannerGameClear.GetComponent<SpriteRenderer>().enabled = false;
         _drMarioAnimator = drMario.GetComponent<Animator>();
         topValue.text = "0010000";
         BoardGrid = new Grid();
         CreateAllVirus();
         CreateNewPill(true);
+
 
 
     }
@@ -113,15 +144,13 @@ public class BoardBehaviour : MonoBehaviour
     {
         _isGameOver = true;
         _drMarioAnimator.SetInteger("MarioState", 99);
-        _gameBanner.GetComponent<SpriteRenderer>().enabled = true;
+        gameBannerGameOver.GetComponent<SpriteRenderer>().enabled = true;
     }
 
     public void EndGame()
     {
         _isGameEnded = true;
-        SpriteRenderer renderer = _gameBanner.GetComponent<SpriteRenderer>();
-        renderer.sprite = endGameBanner;
-        renderer.enabled = true;
+        gameBannerGameClear.GetComponent<SpriteRenderer>().enabled = true;
 
     }
 
@@ -135,7 +164,10 @@ public class BoardBehaviour : MonoBehaviour
 
     public void Update()
     {
-
+        if (Input.GetKeyDown(KeyCode.Return) && (_isGameOver  || _isGameEnded))
+        {
+            SceneManager.LoadScene("SinglePlayerMenu");
+        }
     }
 
     private void CreateAllVirus()
