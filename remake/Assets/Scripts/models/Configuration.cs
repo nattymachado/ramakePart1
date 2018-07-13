@@ -12,9 +12,10 @@ sealed class Configuration
     public Dictionary<int, Color> LevelColor = new Dictionary<int, Color>(){ { 0, Color.white }, { 1, Color.yellow }, { 2, Color.blue }, { 3, Color.red },
         { 4, Color.white }, { 5, Color.yellow }, { 6, Color.blue }, { 7, Color.red }, { 8, Color.white }, { 9, Color.yellow },
         { 10, Color.blue }, { 11, Color.red }, { 12, Color.white }, { 13, Color.yellow }, { 14, Color.blue }, { 15, Color.red },
-        { 16, Color.white }, { 17, Color.yellow }, { 18, Color.blue }, { 19, Color.yellow }  };
+        { 16, Color.white }, { 17, Color.yellow }, { 18, Color.blue }, { 19, Color.red } , { 20, Color.white }  };
 
     public int Level { get; set; }
+    public int UserPoints { get; set; }
     public int PointMulti {
         get {
             return _pointsMulti;

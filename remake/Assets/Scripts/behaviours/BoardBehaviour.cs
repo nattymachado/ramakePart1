@@ -3,7 +3,6 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
-
 public class BoardBehaviour : MonoBehaviour
 {
 
@@ -20,6 +19,7 @@ public class BoardBehaviour : MonoBehaviour
     public Sprite marioGettingPill;
     public AudioSource audioSource;
     public AudioClip music1, music2;
+    public Animator pressEnterAnimation;
     private Dictionary<string, GameObject> _virusPrefab;
     
     public GameObject gameBannerGameOver;
@@ -36,8 +36,12 @@ public class BoardBehaviour : MonoBehaviour
     private int _quantityBlueVirus;
     private int _quantityRedVirus;
     private int _quantityYellowVirus;
-    private int _points;
     private Configuration _configuration;
+
+    public bool GameIsOverOrEnded()
+    {
+        return _isGameEnded || _isGameOver;
+    }
 
 
 
@@ -45,8 +49,11 @@ public class BoardBehaviour : MonoBehaviour
 
     public void Start()
     {
+        
         _configuration = Configuration.Instance;
         background.color = _configuration.LevelColor[_configuration.Level];
+        pressEnterAnimation.GetComponent<SpriteRenderer>().enabled = false;
+        pressEnterAnimation.enabled = false;
 
 
         switch (_configuration.Music)
@@ -94,6 +101,7 @@ public class BoardBehaviour : MonoBehaviour
                 break;
         }
         virusValue.text = (_quantityBlueVirus + _quantityRedVirus + _quantityYellowVirus).ToString().PadLeft(2, '0');
+        scoreValue.text = _configuration.UserPoints.ToString().PadLeft(7, '0');
         _virusPrefab = new Dictionary<string, GameObject> {{ "yellow", yellowVirusPrefab },
             { "red", redVirusPrefab}, { "blue", blueVirusPrefab}};
         gameBannerGameOver.GetComponent<SpriteRenderer>().enabled = false;
@@ -134,8 +142,8 @@ public class BoardBehaviour : MonoBehaviour
 
     public void UpdatePoints(int virusQuantity)
     {
-        _points += (((int) Mathf.Pow(2, virusQuantity) * 100)- 100) * (_configuration.PointMulti);
-        string points = _points.ToString();
+        _configuration.UserPoints += (((int) Mathf.Pow(2, virusQuantity) * 100)- 100) * (_configuration.PointMulti);
+        string points = _configuration.UserPoints.ToString();
         scoreValue.text = points.PadLeft(7, '0');
         UpdateVirusLabel();
     }
@@ -150,12 +158,19 @@ public class BoardBehaviour : MonoBehaviour
         _isGameOver = true;
         _drMarioAnimator.SetInteger("MarioState", 99);
         gameBannerGameOver.GetComponent<SpriteRenderer>().enabled = true;
+        pressEnterAnimation.GetComponent<SpriteRenderer>().enabled = true;
+        pressEnterAnimation.enabled = true;
+        bigVirusBlue.GetComponent<Animator>().SetBool("UserLost", true);
+        bigVirusRed.GetComponent<Animator>().SetBool("UserLost", true);
+        bigVirusYellow.GetComponent<Animator>().SetBool("UserLost", true);
     }
 
     public void EndGame()
     {
         _isGameEnded = true;
         gameBannerGameClear.GetComponent<SpriteRenderer>().enabled = true;
+        pressEnterAnimation.GetComponent<SpriteRenderer>().enabled = true;
+        pressEnterAnimation.enabled = true;
 
     }
 
@@ -169,7 +184,7 @@ public class BoardBehaviour : MonoBehaviour
 
     public void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Return) && (_isGameOver) && (_configuration.Level < 20))
+        if (Input.GetKeyDown(KeyCode.Return) && ((_isGameOver) || (_configuration.Level == 20)))
          {
              SceneManager.LoadScene("SinglePlayerMenu");
          } else if (Input.GetKeyDown(KeyCode.Return) && (_isGameEnded))

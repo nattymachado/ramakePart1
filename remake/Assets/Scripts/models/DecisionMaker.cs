@@ -76,9 +76,9 @@ sealed class DecisionMaker
         {
             return Random.Range(0, Constants.ColorDefinitionsKeys.Count);
         }
-        else if (level >= 15 && level < 20)
+        else if (level >= 15 && level <= 20)
         {
-            if (random > 0.3f)
+            if (random > 0.5f)
             {
                 return pointColors.IndexOf(pointColors.Min(x => x));
             }
