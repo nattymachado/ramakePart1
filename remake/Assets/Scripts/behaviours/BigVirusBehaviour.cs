@@ -18,17 +18,21 @@ public class BigVirusBehaviour : MonoBehaviour
 
     private void Update()
     {
-    if (_angle == 0)
+        if (!_animator.GetBool("UserLost"))
         {
-            _angle = positionModifier;
-        } else
-        {
-            _angle += rotateSpeed * (Time.deltaTime);
+            if (_angle == 0)
+            {
+                _angle = positionModifier;
+            }
+            else
+            {
+                _angle += rotateSpeed * (Time.deltaTime);
 
+            }
+
+            Vector2 offset = new Vector2(Mathf.Cos(_angle), Mathf.Sin(_angle)) * radius;
+            transform.position = centre + offset;
         }
-
-        Vector2 offset = new Vector2(Mathf.Cos(_angle), Mathf.Sin(_angle)) * radius;
-        transform.position = centre + offset;
     }
 
     private IEnumerator WaitToStart()

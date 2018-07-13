@@ -58,17 +58,19 @@ public class PillBehaviour : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-
-        _totalTime += Time.deltaTime;
-        if (_finishedAnimation == true && !finishedMoviment)
+        if (!_boardBehaviour.GameIsOverOrEnded())
         {
-            if (!onlyDownMoviment)
+            _totalTime += Time.deltaTime;
+            if (_finishedAnimation == true && !finishedMoviment)
             {
-                MovimentDownWithKey();
-                MovimentRotate();
-                MovimentLeftOrRight();
+                if (!onlyDownMoviment)
+                {
+                    MovimentDownWithKey();
+                    MovimentRotate();
+                    MovimentLeftOrRight();
+                }
+                MovimentDownAutomatic();
             }
-            MovimentDownAutomatic();
         }
     }
 

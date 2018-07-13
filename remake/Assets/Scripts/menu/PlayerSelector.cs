@@ -12,7 +12,6 @@ public class PlayerSelector : MonoBehaviour {
     void Start () {
 
         _hearth_sound = GetComponent<AudioSource>();
-        StartCoroutine(LoadSceneSinglePlayer());
 
     }
 	
@@ -34,23 +33,13 @@ public class PlayerSelector : MonoBehaviour {
         {
             if (transform.position.y == -1.97f)
             {
-                _async.allowSceneActivation = true;
+                SceneManager.LoadScene("SinglePlayerMenu");
             }
             else
             {
                 SceneManager.LoadScene("CreditsScene");
             }
         }
-    }
-
-    private IEnumerator LoadSceneSinglePlayer()
-    {
-        _async = SceneManager.LoadSceneAsync("SinglePlayerMenu");
-        _async.allowSceneActivation = false;
-
-        Debug.Log("start loading");
-
-        yield return _async;
     }
 }
 

@@ -44,7 +44,7 @@ public class MenuConfigurations : MonoBehaviour
     }
     void Update()
     {
-
+        Resources.Load("Sprites");
         if (!_clickedEnter)
         {
             if (Input.GetKeyDown(KeyCode.DownArrow) && _option < 2)

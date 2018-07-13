@@ -43,7 +43,8 @@ public class Grid
 
     public void CheckGameOver()
     {
-        if (_data[Constants.Rows - 1, Constants.Columns / 2] != null && _data[Constants.Rows - 1, Constants.Columns / 2].FinalizedMoviment())
+        if ((_data[Constants.Rows - 1, Constants.Columns / 2] != null && _data[Constants.Rows - 1, Constants.Columns / 2].FinalizedMoviment())
+            || _data[Constants.Rows - 1, (Constants.Columns / 2) - 1] != null && _data[Constants.Rows - 1, (Constants.Columns / 2 - 1)].FinalizedMoviment())
         {
             IsGameOver = true;
         } 
