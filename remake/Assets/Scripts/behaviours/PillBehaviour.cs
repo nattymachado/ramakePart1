@@ -64,9 +64,9 @@ public class PillBehaviour : MonoBehaviour {
         {
             if (!onlyDownMoviment)
             {
-                //MovimentDownWithKey();
-                //MovimentRotate();
-                //MovimentLeftOrRight();
+                MovimentDownWithKey();
+                MovimentRotate();
+                MovimentLeftOrRight();
             }
             MovimentDownAutomatic();
         }
@@ -246,22 +246,22 @@ public class PillBehaviour : MonoBehaviour {
         if (_pill.State == PillState.VERTICAL)
         {
                 nextPositionResults = GetNextItemDown(_pill.PillParts["first"], false);
-                //_nextItem1 = (GridItem)nextPositionResults["nextItem"];
-                //isPositionEmpty = _nextItem1 == null && IsValidPosition((int)nextPositionResults["positionsDown"], _pill.PillParts["first"]);
+                _nextItem1 = (GridItem)nextPositionResults["nextItem"];
+                isPositionEmpty = _nextItem1 == null && IsValidPosition((int)nextPositionResults["positionsDown"], _pill.PillParts["first"]);
         }
         else
         {
             if (_pill.PillParts["second"] != null)
             {
                 nextPositionResults = GetNextItemDown(_pill.PillParts["second"], false);
-                //_nextItem2 = (GridItem)nextPositionResults["nextItem"];
+                _nextItem2 = (GridItem)nextPositionResults["nextItem"];
 
             }
             nextPositionResults = GetNextItemDown(_pill.PillParts["first"], false);
-            //_nextItem1 = (GridItem)nextPositionResults["nextItem"];
-            //isPositionEmpty = _nextItem2 == null && _nextItem1 == null && IsValidPosition((int)nextPositionResults["positionsDown"], _pill.PillParts["first"]);
+            _nextItem1 = (GridItem)nextPositionResults["nextItem"];
+            isPositionEmpty = _nextItem2 == null && _nextItem1 == null && IsValidPosition((int)nextPositionResults["positionsDown"], _pill.PillParts["first"]);
         }
-        return true;
+        return isPositionEmpty;
     }
 
     public void MovimentDownAutomatic()
@@ -272,7 +272,7 @@ public class PillBehaviour : MonoBehaviour {
         {
             if (_period > _configuration.SpeedPills)
             {
-                //MovimentDown();
+                MovimentDown();
                 _period = 0;
             }
             else
