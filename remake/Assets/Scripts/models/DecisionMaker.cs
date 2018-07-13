@@ -31,18 +31,14 @@ sealed class DecisionMaker
     private DecisionMaker()
     {
         Inputs = new Dictionary<string, List<int>>();
-        /*Inputs["lastColors"] = new List<int>();
-        Inputs["lastColor"].AddRange(new [] { 0,0});
-        Inputs["newColors"] = new List<int>();
-        Inputs["newColors"].AddRange(new[] { 0, 0 });*/
     }
 
-    public int DecideNewColor(bool isFirst, Grid grid)
+    public int DecideNewColor(bool isFirst, Grid grid, int level)
     {
         int colorCode = 0;
         if (isFirst)
         {
-            colorCode = CheckTheGrid(grid);
+            colorCode = CheckTheGrid(grid, level);
         } else
         {
             colorCode = Random.Range(0, Constants.ColorDefinitionsKeys.Count);
@@ -51,35 +47,51 @@ sealed class DecisionMaker
         return colorCode;
     }
 
-    public void IncludeLastColors(int colorCode, bool isFirst)
+    public int CheckTheGrid(Grid grid, int level)
     {
-        if (Inputs["lastColors"] == null)
+        List<int> pointColors = grid.GetColorPoints();
+        float random = Random.value;
+
+        if (level < 5)
         {
-            Inputs["lastColors"] = new List<int>();
-        } else
-        {
-            if (isFirst)
+            if (random > 0.5f)
             {
-                Inputs["lastColors"].Insert(0,colorCode);
+                return pointColors.IndexOf(pointColors.Max(x => x));
             } else
             {
-                Inputs["lastColors"].Insert(1, colorCode);
+                return Random.Range(0, Constants.ColorDefinitionsKeys.Count);
             }
-        } 
-    }
-
-    public void CheckLastColors(int colorCode)
-    {
-       if (Inputs["lastColors"][0] == colorCode || Inputs["lastColors"][1] == colorCode)
+        } else  if (level >= 5 && level < 10)
         {
-
+            if (random > 0.7f)
+            {
+                return pointColors.IndexOf(pointColors.Max(x => x));
+            }
+            else
+            {
+                return Random.Range(0, Constants.ColorDefinitionsKeys.Count);
+            }
         }
-    }
-
-    public int CheckTheGrid(Grid grid)
-    {
-        List<int> pointColors = grid.GetLastColors();
-        return pointColors.IndexOf(pointColors.Max(x => x)); 
+        else if (level >= 10 && level < 15)
+        {
+            return Random.Range(0, Constants.ColorDefinitionsKeys.Count);
+        }
+        else if (level >= 15 && level < 20)
+        {
+            if (random > 0.3f)
+            {
+                return pointColors.IndexOf(pointColors.Min(x => x));
+            }
+            else
+            {
+                return Random.Range(0, Constants.ColorDefinitionsKeys.Count);
+            }
+        }
+        else
+        {
+            return Random.Range(0, Constants.ColorDefinitionsKeys.Count);
+        }
+         
     }
 
 }

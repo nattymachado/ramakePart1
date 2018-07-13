@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
@@ -135,9 +134,15 @@ public class BoardBehaviour : MonoBehaviour
 
     public void UpdatePoints(int virusQuantity)
     {
-        _points += (virusQuantity * 100);
+        _points += (((int) Mathf.Pow(2, virusQuantity) * 100)- 100) * (_configuration.PointMulti);
         string points = _points.ToString();
         scoreValue.text = points.PadLeft(7, '0');
+        UpdateVirusLabel();
+    }
+
+    private void UpdateVirusLabel()
+    {
+        virusValue.text = (_quantityBlueVirus + _quantityRedVirus + _quantityYellowVirus).ToString().PadLeft(2, '0');
     }
 
     public void OverGame()
@@ -164,10 +169,14 @@ public class BoardBehaviour : MonoBehaviour
 
     public void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Return) && (_isGameOver  || _isGameEnded))
-        {
-            SceneManager.LoadScene("SinglePlayerMenu");
-        }
+        if (Input.GetKeyDown(KeyCode.Return) && (_isGameOver) && (_configuration.Level < 20))
+         {
+             SceneManager.LoadScene("SinglePlayerMenu");
+         } else if (Input.GetKeyDown(KeyCode.Return) && (_isGameEnded))
+         {
+            _configuration.Level += 1; 
+            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+         }
     }
 
     private void CreateAllVirus()

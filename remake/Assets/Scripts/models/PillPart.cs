@@ -64,7 +64,8 @@ public class PillPart : GridItem
         IsAlone = false;
         IsFirst = isFirst;
         ParentId = parentId;
-        int keyIndex = DecisionMaker.Instance.DecideNewColor(isFirst, grid);
+        Configuration configuration = Configuration.Instance;
+        int keyIndex = DecisionMaker.Instance.DecideNewColor(isFirst, grid, configuration.Level);
         string colorKey = Constants.ColorDefinitionsKeys[keyIndex];
         PillPartColor = Constants.ColorsDefinitions[colorKey];
     }

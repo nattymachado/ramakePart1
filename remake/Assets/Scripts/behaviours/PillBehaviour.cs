@@ -35,13 +35,13 @@ public class PillBehaviour : MonoBehaviour {
     private Color[] initColors;
     private float _totalTime;
     private float _period = 0;
+    private int _level = 0;
     private bool _finishedAnimation = false;
     public bool finishedMoviment = false;
     public bool onlyDownMoviment = false;
     private bool _isMovingDown = false;
     private Pill _pill;
     private GridItem _nextItem1, _nextItem2 = null;
-    //private int positionsDown = 0;
 
     
 
@@ -64,9 +64,9 @@ public class PillBehaviour : MonoBehaviour {
         {
             if (!onlyDownMoviment)
             {
-                MovimentDownWithKey();
-                MovimentRotate();
-                MovimentLeftOrRight();
+                //MovimentDownWithKey();
+                //MovimentRotate();
+                //MovimentLeftOrRight();
             }
             MovimentDownAutomatic();
         }
@@ -245,32 +245,23 @@ public class PillBehaviour : MonoBehaviour {
         Dictionary<string, object> nextPositionResults = new Dictionary<string, object>();
         if (_pill.State == PillState.VERTICAL)
         {
-            /*if (_pill.PillParts["second"] != null)
-            {
-                nextPositionResults = GetNextItemDown(_pill.PillParts["second"], false);
-                _nextItem2 = (GridItem) nextPositionResults["nextItem"];
-                isPositionEmpty = _nextItem2 == null && IsValidPosition((int)nextPositionResults["positionsDown"], _pill.PillParts["second"]);
-            }
-            else
-            {*/
                 nextPositionResults = GetNextItemDown(_pill.PillParts["first"], false);
-                _nextItem1 = (GridItem)nextPositionResults["nextItem"];
-                isPositionEmpty = _nextItem1 == null && IsValidPosition((int)nextPositionResults["positionsDown"], _pill.PillParts["first"]);
-            //}
+                //_nextItem1 = (GridItem)nextPositionResults["nextItem"];
+                //isPositionEmpty = _nextItem1 == null && IsValidPosition((int)nextPositionResults["positionsDown"], _pill.PillParts["first"]);
         }
         else
         {
             if (_pill.PillParts["second"] != null)
             {
                 nextPositionResults = GetNextItemDown(_pill.PillParts["second"], false);
-                _nextItem2 = (GridItem)nextPositionResults["nextItem"];
+                //_nextItem2 = (GridItem)nextPositionResults["nextItem"];
 
             }
             nextPositionResults = GetNextItemDown(_pill.PillParts["first"], false);
-            _nextItem1 = (GridItem)nextPositionResults["nextItem"];
-            isPositionEmpty = _nextItem2 == null && _nextItem1 == null && IsValidPosition((int)nextPositionResults["positionsDown"], _pill.PillParts["first"]);
+            //_nextItem1 = (GridItem)nextPositionResults["nextItem"];
+            //isPositionEmpty = _nextItem2 == null && _nextItem1 == null && IsValidPosition((int)nextPositionResults["positionsDown"], _pill.PillParts["first"]);
         }
-        return isPositionEmpty;
+        return true;
     }
 
     public void MovimentDownAutomatic()
@@ -281,7 +272,7 @@ public class PillBehaviour : MonoBehaviour {
         {
             if (_period > _configuration.SpeedPills)
             {
-                MovimentDown();
+                //MovimentDown();
                 _period = 0;
             }
             else

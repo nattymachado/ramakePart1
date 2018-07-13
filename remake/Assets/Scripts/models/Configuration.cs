@@ -6,6 +6,7 @@ sealed class Configuration
 {
     private static readonly Configuration instance = new Configuration();
     private int _speed;
+    private int _pointsMulti;
     private float _speedPills;
     private string _speedName;
     public Dictionary<int, Color> LevelColor = new Dictionary<int, Color>(){ { 0, Color.white }, { 1, Color.yellow }, { 2, Color.blue }, { 3, Color.red },
@@ -14,6 +15,11 @@ sealed class Configuration
         { 16, Color.white }, { 17, Color.yellow }, { 18, Color.blue }, { 19, Color.yellow }  };
 
     public int Level { get; set; }
+    public int PointMulti {
+        get {
+            return _pointsMulti;
+        }
+    }
     public float SpeedPills
     {
         get
@@ -33,17 +39,20 @@ sealed class Configuration
             if (_speed == 0)
             {
                 _speedName = "LOW";
-                _speedPills = 1f;
+                _speedPills = 0.9f;
+                _pointsMulti = 1;
             }
             else if (_speed == 1)
             {
                 _speedName = "MED";
                 _speedPills = 0.4f;
+                _pointsMulti = 2;
             }
             else
             {
                 _speedName = "HI";
                 _speedPills = 0.2f;
+                _pointsMulti = 3;
             }
         }
     }
@@ -68,7 +77,9 @@ sealed class Configuration
 
     private Configuration()
     {
-        
+        Speed = 1;
+        Level = 0;
+        Music = 0;
     }
 
     

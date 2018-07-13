@@ -57,7 +57,6 @@ public class BigVirusBehaviour : MonoBehaviour
     public void SetVirusDead()
     {
         _animator.SetBool("isDead", true);
-        //StartCoroutine(WaitVirusDeadTime());
     }
 
     public void Destroy()

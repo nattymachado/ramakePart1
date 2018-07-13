@@ -326,7 +326,7 @@ public class Grid
         return points;
     }
 
-    public List<int> GetLastColors()
+    public List<int> GetColorPoints()
     {
         int redPoints = 0;
         int bluePoints = 0;

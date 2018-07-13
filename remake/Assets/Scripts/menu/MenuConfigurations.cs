@@ -1,5 +1,6 @@
 ﻿using UnityEngine.SceneManagement;
 using UnityEngine;
+using System.Collections;
 using UnityEngine.UI;
 
 public class MenuConfigurations : MonoBehaviour
@@ -11,8 +12,10 @@ public class MenuConfigurations : MonoBehaviour
     private int _option_music;
     private int _option_speed;
     private int _option_level;
+    private bool _clickedEnter = false;
 
-    
+
+
     public Sprite virus_level_highlight;
     public Sprite virus_level_no_highlight;
     public Sprite speed_highlight;
@@ -32,117 +35,125 @@ public class MenuConfigurations : MonoBehaviour
     private void Start()
     {
         _option = 0;
-        _option_level = 0;
-        _option_speed = 1;
-        _option_music = 0;
+
+        Configuration configuration = Configuration.Instance;
+        _option_level = configuration.Level;
+        _option_speed = configuration.Speed;
+        _option_music = configuration.Music;
+        levelValue.text = _option_level.ToString().PadLeft(2, '0');
     }
     void Update()
     {
 
-        if (Input.GetKeyDown(KeyCode.DownArrow) && _option < 2)
+        if (!_clickedEnter)
         {
-            _option += 1;
-            _beep_vertical.Play();
-        }
-        else if (Input.GetKeyDown(KeyCode.UpArrow) && _option > 0)
-        {
-            _option -= 1;
-            _beep_vertical.Play();
+            if (Input.GetKeyDown(KeyCode.DownArrow) && _option < 2)
+            {
+                _option += 1;
+                _beep_vertical.Play();
+            }
+            else if (Input.GetKeyDown(KeyCode.UpArrow) && _option > 0)
+            {
+                _option -= 1;
+                _beep_vertical.Play();
+            }
+
+            if (Input.GetKeyDown(KeyCode.RightArrow) && _option == 0 && _option_level < 20)
+            {
+                _option_level += 1;
+
+                levelValue.text = _option_level.ToString().PadLeft(2, '0');
+                _beep_horizontal.Play();
+            }
+            else if (Input.GetKeyDown(KeyCode.LeftArrow) && _option == 0 && _option_level > 0)
+            {
+                _option_level -= 1;
+                levelValue.text = _option_level.ToString().PadLeft(2, '0');
+                _beep_horizontal.Play();
+            }
+
+            if (Input.GetKeyDown(KeyCode.RightArrow) && _option == 1 && _option_speed < 2)
+            {
+                _option_speed += 1;
+                _beep_horizontal.Play();
+            }
+            else if (Input.GetKeyDown(KeyCode.LeftArrow) && _option == 1 && _option_speed > 0)
+            {
+                _option_speed -= 1;
+                _beep_horizontal.Play();
+            }
+
+            if (Input.GetKeyDown(KeyCode.RightArrow) && _option == 2 && _option_music < 2)
+            {
+                _option_music += 1;
+                _beep_horizontal.Play();
+            }
+            else if (Input.GetKeyDown(KeyCode.LeftArrow) && _option == 2 && _option_music > 0)
+            {
+                _option_music -= 1;
+                _beep_horizontal.Play();
+            }
+
+            if (_option == 0)
+            {
+                GameObject.Find("menu_virus_level").GetComponent<SpriteRenderer>().sprite = virus_level_highlight;
+            }
+            else
+            {
+                GameObject.Find("menu_virus_level").GetComponent<SpriteRenderer>().sprite = virus_level_no_highlight;
+            }
+
+            if (_option == 1)
+            {
+                GameObject.Find("menu_speed").GetComponent<SpriteRenderer>().sprite = speed_highlight;
+            }
+            else
+            {
+                GameObject.Find("menu_speed").GetComponent<SpriteRenderer>().sprite = speed_no_highlight;
+            }
+
+            if (_option == 2)
+            {
+                GameObject.Find("menu_music_type").GetComponent<SpriteRenderer>().sprite = music_type_highlight;
+            }
+            else
+            {
+                GameObject.Find("menu_music_type").GetComponent<SpriteRenderer>().sprite = music_type_no_higlight;
+            }
+
+            GameObject.Find("menu_arrow_down").transform.position = new Vector3(-1.82f + (_option_level * 0.18f), 1.63f, 0);
+
+            GameObject.Find("menu_arrow_down_large").transform.position = new Vector3(-1.2f + (_option_speed * 1.3f), -0.82f, 0);
+
+            if (_option_music == 0)
+            {
+                GameObject.Find("menu_fever").GetComponent<SpriteRenderer>().sprite = menu_fever_outlined;
+            }
+            else
+            {
+                GameObject.Find("menu_fever").GetComponent<SpriteRenderer>().sprite = menu_fever;
+            }
+
+            if (_option_music == 1)
+            {
+                GameObject.Find("menu_chill").GetComponent<SpriteRenderer>().sprite = menu_chill_outlined;
+            }
+            else
+            {
+                GameObject.Find("menu_chill").GetComponent<SpriteRenderer>().sprite = menu_chill;
+            }
+
+            if (_option_music == 2)
+            {
+                GameObject.Find("menu_off").GetComponent<SpriteRenderer>().sprite = menu_off_outlined;
+            }
+            else
+            {
+                GameObject.Find("menu_off").GetComponent<SpriteRenderer>().sprite = menu_off;
+            }
         }
 
-        if (Input.GetKeyDown(KeyCode.RightArrow) && _option == 0 && _option_level < 20)
-        {
-            _option_level += 1;
-
-            levelValue.text = _option_level.ToString().PadLeft(2, '0');
-            _beep_horizontal.Play();
-        }
-        else if (Input.GetKeyDown(KeyCode.LeftArrow) && _option == 0 && _option_level > 0)
-        {
-            _option_level -= 1;
-            levelValue.text = _option_level.ToString().PadLeft(2, '0');
-            _beep_horizontal.Play();
-        }
-
-        if (Input.GetKeyDown(KeyCode.RightArrow) && _option == 1 && _option_speed < 2)
-        {
-            _option_speed += 1;
-            _beep_horizontal.Play();
-        }
-        else if (Input.GetKeyDown(KeyCode.LeftArrow) && _option == 1 && _option_speed > 0)
-        {
-            _option_speed -= 1;
-            _beep_horizontal.Play();
-        }
         
-        if (Input.GetKeyDown(KeyCode.RightArrow) && _option == 2 && _option_music < 2)
-        {
-            _option_music += 1;
-            _beep_horizontal.Play();
-        }
-        else if (Input.GetKeyDown(KeyCode.LeftArrow) && _option == 2 && _option_music > 0)
-        {
-            _option_music -= 1;
-            _beep_horizontal.Play();
-        }
-
-        if (_option == 0)
-        {
-            GameObject.Find("menu_virus_level").GetComponent<SpriteRenderer>().sprite = virus_level_highlight;
-        }
-        else
-        {
-            GameObject.Find("menu_virus_level").GetComponent<SpriteRenderer>().sprite = virus_level_no_highlight;
-        }
-
-        if (_option == 1)
-        {
-            GameObject.Find("menu_speed").GetComponent<SpriteRenderer>().sprite = speed_highlight;
-        }
-        else
-        {
-            GameObject.Find("menu_speed").GetComponent<SpriteRenderer>().sprite = speed_no_highlight;
-        }
-
-        if (_option == 2)
-        {
-            GameObject.Find("menu_music_type").GetComponent<SpriteRenderer>().sprite = music_type_highlight;
-        }
-        else
-        {
-            GameObject.Find("menu_music_type").GetComponent<SpriteRenderer>().sprite = music_type_no_higlight;
-        }
-
-        GameObject.Find("menu_arrow_down").transform.position = new Vector3(-1.82f + (_option_level * 0.18f), 1.63f, 0);
-
-        GameObject.Find("menu_arrow_down_large").transform.position = new Vector3(-1.2f + (_option_speed * 1.3f), -0.82f, 0);
-
-        if (_option_music == 0)
-        {
-            GameObject.Find("menu_fever").GetComponent<SpriteRenderer>().sprite = menu_fever_outlined;
-        }
-        else
-        {
-            GameObject.Find("menu_fever").GetComponent<SpriteRenderer>().sprite = menu_fever;
-        }
-
-        if (_option_music == 1)
-        {
-            GameObject.Find("menu_chill").GetComponent<SpriteRenderer>().sprite = menu_chill_outlined;
-        }
-        else
-        {
-            GameObject.Find("menu_chill").GetComponent<SpriteRenderer>().sprite = menu_chill;
-        }
-
-        if (_option_music == 2)
-        {
-            GameObject.Find("menu_off").GetComponent<SpriteRenderer>().sprite = menu_off_outlined;
-        }
-        else
-        {
-            GameObject.Find("menu_off").GetComponent<SpriteRenderer>().sprite = menu_off;
-        }
 
         if (Input.GetKeyDown(KeyCode.Return))
         {
@@ -150,8 +161,12 @@ public class MenuConfigurations : MonoBehaviour
             configuration.Level = _option_level;
             configuration.Speed = _option_speed;
             configuration.Music = _option_music;
+            _clickedEnter = true;
             SceneManager.LoadScene("BoardGame");
-            
         }
     }
+
+   
+
+   
 }

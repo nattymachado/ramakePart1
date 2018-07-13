@@ -1,16 +1,20 @@
 ﻿using UnityEngine.SceneManagement;
 using UnityEngine;
+using System.Collections;
 
 
 public class PlayerSelector : MonoBehaviour {
 
     private AudioSource _hearth_sound = null;
+    private AsyncOperation _async;
 
     // Use this for initialization
     void Start () {
 
         _hearth_sound = GetComponent<AudioSource>();
-	}
+        StartCoroutine(LoadSceneSinglePlayer());
+
+    }
 	
 	// Update is called once per frame
 	void Update () {
@@ -30,13 +34,23 @@ public class PlayerSelector : MonoBehaviour {
         {
             if (transform.position.y == -1.97f)
             {
-                SceneManager.LoadScene("SinglePlayerMenu");
+                _async.allowSceneActivation = true;
             }
             else
             {
                 SceneManager.LoadScene("CreditsScene");
             }
         }
+    }
+
+    private IEnumerator LoadSceneSinglePlayer()
+    {
+        _async = SceneManager.LoadSceneAsync("SinglePlayerMenu");
+        _async.allowSceneActivation = false;
+
+        Debug.Log("start loading");
+
+        yield return _async;
     }
 }
 
