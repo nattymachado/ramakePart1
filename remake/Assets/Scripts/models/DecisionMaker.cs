@@ -41,7 +41,8 @@ sealed class DecisionMaker
             colorCode = CheckTheGrid(grid, level);
         } else
         {
-            colorCode = Random.Range(0, Constants.ColorDefinitionsKeys.Count);
+            ;// colorCode = Random.Range(0, Constants.ColorDefinitionsKeys.Count);
+            colorCode = CheckTheGrid(grid, level);
         }
         
         return colorCode;
@@ -51,7 +52,7 @@ sealed class DecisionMaker
     {
         List<int> pointColors = grid.GetColorPoints();
         float random = Random.value;
-
+        return pointColors.IndexOf(pointColors.Max(x => x));
         if (level < 5)
         {
             if (random > 0.5f)

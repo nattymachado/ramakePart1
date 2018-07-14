@@ -11,6 +11,9 @@ public class BigVirusBehaviour : MonoBehaviour
     public Vector2 centre;
     private float _angle;
 
+    private GameObject _board;
+    public AudioSource virusDownAudioSource;
+
     public void Start()
     {
         _animator = GetComponent<Animator>();
@@ -55,6 +58,7 @@ public class BigVirusBehaviour : MonoBehaviour
     public void SetVirusDown()
     {
         _animator.SetBool("isDown", true);
+        virusDownAudioSource.Play();
         StartCoroutine(WaitVirusDownTime());
     }
 

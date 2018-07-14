@@ -43,7 +43,7 @@ public class PillBehaviour : MonoBehaviour {
     private Pill _pill;
     private GridItem _nextItem1, _nextItem2 = null;
 
-    
+
 
     // Use this for initialization
     void Start () {
@@ -316,6 +316,7 @@ public class PillBehaviour : MonoBehaviour {
             }
             if (_nextItem1 == null && _nextItem2 == null)
             {
+                _boardBehaviour.pillDownAudioSource.Play();
                 _period = _configuration.SpeedPills;
             } 
             
@@ -389,8 +390,6 @@ public class PillBehaviour : MonoBehaviour {
 
             }
 
-
-
             switch (_pill.State)
             {
                 case PillState.HORIZONTAL:
@@ -436,11 +435,13 @@ public class PillBehaviour : MonoBehaviour {
     {
         if (_grid.IsPositionEmpty(_pill.PillParts["second"].PositionRow - 1, _pill.PillParts["second"].PositionColumn + 1))
         {
+            _boardBehaviour.snnipingPillAudioSource.Play();
             GetHorizontalPill(false);
             UpdatePositionsPill(0, 0, -1, 1);
             _pill.State = PillState.HORIZONTAL;
         } else if (_pill.PillParts["second"].PositionColumn == (Constants.Columns-1) && _grid.IsPositionEmpty(_pill.PillParts["first"].PositionRow, _pill.PillParts["first"].PositionColumn - 1) )
         {
+            _boardBehaviour.snnipingPillAudioSource.Play(); 
             GetHorizontalPill(true);
             UpdatePositionsPill(0, -1, -1, 0);
             _pill.State = PillState.HORIZONTAL;
@@ -452,7 +453,7 @@ public class PillBehaviour : MonoBehaviour {
 
         if (_grid.IsPositionEmpty(_pill.PillParts["second"].PositionRow + 1, _pill.PillParts["second"].PositionColumn -1))
         {
-
+            _boardBehaviour.snnipingPillAudioSource.Play();
             GetVerticalPill();
             UpdatePositionsPill(0, 0, 1, -1);
             _pill.State = PillState.VERTICAL;
@@ -486,6 +487,7 @@ public class PillBehaviour : MonoBehaviour {
 
     private void FinalizeMoviment()
     {
+        _boardBehaviour.pillSurfaceAudioSource.Play();
         if (!onlyDownMoviment && !_grid.IsGameOver)
         {
             _board.GetComponent<BoardBehaviour>().ThrowPill(true);

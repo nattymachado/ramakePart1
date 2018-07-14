@@ -13,6 +13,11 @@ public class PillPart : GridItem
     public Color PillPartColor { get; set; }
     public PillPartBehaviour Behaviour { get; set; }
 
+    public void PlayOnlyPillsAudio()
+    {
+        Behaviour.GetComponentInParent<PillBehaviour>().Board.GetComponent<BoardBehaviour>().onlyPillsAudioSource.Play();
+    }
+
     public Color GetColor()
     {
         if (!Behaviour.PillPartObj.IsDestroyed)
@@ -72,7 +77,13 @@ public class PillPart : GridItem
 
     public bool FinalizedMoviment()
     {
-        return Behaviour.GetComponentInParent<PillBehaviour>().finishedMoviment;
+        if (!IsDestroyed)
+        {
+            return Behaviour.GetComponentInParent<PillBehaviour>().finishedMoviment;
+        } else
+        {
+            return true;
+        }
     }
 
 

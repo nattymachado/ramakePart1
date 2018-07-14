@@ -14,6 +14,11 @@ public class Virus : GridItem
             return true;
     }
 
+    public void PlayOnlyPillsAudio()
+    {
+        //Not implemented to virus
+    }
+
     public bool OnlyDownMoviment()
     {
         return false;

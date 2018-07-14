@@ -40,7 +40,7 @@ sealed class Configuration
             if (_speed == 0)
             {
                 _speedName = "LOW";
-                _speedPills = 0.9f;
+                _speedPills = 4f;
                 _pointsMulti = 1;
             }
             else if (_speed == 1)

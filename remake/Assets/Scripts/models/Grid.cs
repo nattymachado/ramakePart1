@@ -117,15 +117,25 @@ public class Grid
                 {
                     virusQuantity += UpdateSpriteOfMatchesAndGetVirusQuantity(matchesHorizontal);
                     yield return new WaitForSeconds(Constants.WaitBeforePotentialMatchesCheck);
-                    RemoveMatchPills(matchesHorizontal);
                 }
 
                 if (matchesVertical != null)
                 {
                     virusQuantity += UpdateSpriteOfMatchesAndGetVirusQuantity(matchesVertical);
                     yield return new WaitForSeconds(Constants.WaitBeforePotentialMatchesCheck);
+                }
+
+                if (matchesHorizontal != null)
+                {
+                   RemoveMatchPills(matchesHorizontal);
+                }
+
+                if (matchesVertical != null)
+                {
                     RemoveMatchPills(matchesVertical);
                 }
+
+
 
                 if (virusQuantity > 0)
                 {
@@ -140,29 +150,41 @@ public class Grid
 
     private void RemoveMatchPills(List<int[]> matches)
     {
-       List<GridItem> items = new List<GridItem>();
+        List<GridItem> items = new List<GridItem>();
         matches.Reverse();
         for (int index = 0; index < matches.Count; index++)
         {
+            Debug.Log(matches.Count);
+            Debug.Log(index);
             if (_data[matches[index][0], matches[index][1]] != null)
             {
-                items.Add(_data[matches[index][0], matches[index][1]]);
-                items[index].SetAsDestroyed();
-                _data[matches[index][0], matches[index][1]] = null;
+                try
+                {
+                    items.Add(_data[matches[index][0], matches[index][1]]);
+                    items[index].SetAsDestroyed();
+                    _data[matches[index][0], matches[index][1]] = null;
+                } catch (System.Exception exception)
+                {
+                    Debug.Log("The pill is already removed");
+                }
+                
             }
             
             
         }
-
+        Debug.Log("Aqui");
+        Debug.Log(items.Count);
         for (int index = 0; index < items.Count;  index++)
         {
             items[index].DestroyItem();
         }
+        Debug.Log("Sai");
     }
 
     private int UpdateSpriteOfMatchesAndGetVirusQuantity(List<int[]> matches)
     {
         int virusQuantity = 0;
+        Debug.Log("Update");
         for (int index = 0; index < matches.Count; index++)
         {
             if (_data[matches[index][0], matches[index][1]] != null)
@@ -174,6 +196,12 @@ public class Grid
                 }
             }
         }
+
+        /*if (virusQuantity == 0 && matches.Count > 0)
+        {
+            _data[matches[0][0], matches[0][1]].PlayOnlyPillsAudio();
+        }*/
+
         return virusQuantity;
     }
 

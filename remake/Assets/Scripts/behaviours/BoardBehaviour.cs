@@ -17,7 +17,16 @@ public class BoardBehaviour : MonoBehaviour
     public Image background;
     public Sprite transparentPill;
     public Sprite marioGettingPill;
-    public AudioSource audioSource;
+    public AudioSource mainAudioSource;
+    public AudioSource gameOverAudioSource;
+    public AudioSource gameWinAudioSource;
+
+    public AudioSource pillSurfaceAudioSource;
+    public AudioSource virusDownSource;
+    public AudioSource snnipingPillAudioSource;
+    public AudioSource onlyPillsAudioSource;
+    public AudioSource pillDownAudioSource;
+
     public AudioClip music1, music2;
     public Animator pressEnterAnimation;
     private Dictionary<string, GameObject> _virusPrefab;
@@ -59,10 +68,10 @@ public class BoardBehaviour : MonoBehaviour
         switch (_configuration.Music)
         {
             case 0:
-                audioSource.clip = music1;
+                mainAudioSource.clip = music1;
                 break;
             case 1:
-                audioSource.clip = music2;
+                mainAudioSource.clip = music2;
                 break;
             default:
                 break;
@@ -70,11 +79,11 @@ public class BoardBehaviour : MonoBehaviour
 
         if (_configuration.Music < 2)
         {
-            audioSource.enabled = true;
-            audioSource.Play();
+            mainAudioSource.enabled = true;
+            mainAudioSource.Play();
         } else
         {
-            audioSource.enabled = false;
+            mainAudioSource.enabled = false;
         }
 
         levelValue.text = _configuration.Level.ToString().PadLeft(2, '0');
@@ -156,6 +165,8 @@ public class BoardBehaviour : MonoBehaviour
     public void OverGame()
     {
         _isGameOver = true;
+        mainAudioSource.Stop();
+        gameOverAudioSource.Play();
         _drMarioAnimator.SetInteger("MarioState", 99);
         gameBannerGameOver.GetComponent<SpriteRenderer>().enabled = true;
         pressEnterAnimation.GetComponent<SpriteRenderer>().enabled = true;
@@ -168,10 +179,11 @@ public class BoardBehaviour : MonoBehaviour
     public void EndGame()
     {
         _isGameEnded = true;
+        mainAudioSource.Stop();
+        gameWinAudioSource.Play();
         gameBannerGameClear.GetComponent<SpriteRenderer>().enabled = true;
         pressEnterAnimation.GetComponent<SpriteRenderer>().enabled = true;
         pressEnterAnimation.enabled = true;
-
     }
 
     public void ThrowPill(bool isThrowing)
